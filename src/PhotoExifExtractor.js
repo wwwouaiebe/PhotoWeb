@@ -168,14 +168,12 @@ class PhotoExifExctractor {
             // no date found in the exif... Searching if the photo file name can be converted to an iso date
             // Searching file name
             let strDateTime = this.#photoFileName.split ( '/' ).reverse ( ) [ 0 ].split ( '.' ) [ 0 ];
-            console.log ( this.#photoFileName );
 
             // Adding : to the file name ( reminder : is not a valid char in files names ) 
             strDateTime = strDateTime.slice ( 0, 13) + ':' + strDateTime.slice ( 13, 15) + ':' + strDateTime.slice ( 15 );
 
             // verify that the file name is a valid iso date
             if ( isNaN ( Date.parse ( strDateTime ) ) ) {
-                console.log ( strDateTime);
                 this.#noExifPhotos.push ( this.#photoFileName );
             }
             else {
@@ -283,14 +281,18 @@ class PhotoExifExctractor {
         }
 
         // display errors
-        console.info ( '\nPhotos without exif data and bad file name: ');
-        this.#noExifPhotos.forEach (
-            noExifPhoto => console.info ( '\t' + noExifPhoto )
-        );
-        console.info ( 'Photos without width and/or height: ');
-        this.#noWidthHeightPhotos.forEach (
-            noWidthHeightPhoto => console.info ( '\t' + noWidthHeightPhoto )
-        );
+        if ( 0 !== this.#noExifPhotos.length ) {
+            console.info ( '\n\n\x1b[31mPhotos without exif data and bad file name: \x1b[0m');
+            this.#noExifPhotos.forEach (
+                noExifPhoto => console.info ( '\t\x1b[31m' + noExifPhoto + '\x1b[0m')
+            );
+        }
+        if ( 0 !== this.#noWidthHeightPhotos.length ) {
+           console.info ( '\n\n\x1b[31mPhotos without width and/or height: \x1b[0m');
+            this.#noWidthHeightPhotos.forEach (
+                noWidthHeightPhoto => console.info ( '\t\x1b[31m' + noWidthHeightPhoto + '\x1b[31m')
+            );
+        }
 
         return false;
     }

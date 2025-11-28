@@ -24,7 +24,7 @@ Doc reviewed ...
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
 import theConfig from "./Config.js";
-import fs from 'fs';
+import DirManager from './DirManager.js';
 import PhotoExifExctractor from './PhotoExifExtractor.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -42,18 +42,15 @@ class AppLoader {
 
 	static get #version ( ) { return 'v1.0.0-dev'; }
 
-	/**
-	A const to use when exit the app due to a bad parameter
-	@type {Number}
-	*/
-
-	static get #EXIT_BAD_PARAMETER ( ) { return 9; }
+	#startTime;
 
 	/**
 	Complete theConfig object from the app parameters
 	*/
 
     #createConfig ( ) {
+
+		process.exitCode = 0;
         process.argv.forEach (
             arg => {
                 const argContent = arg.split ( '=' );
@@ -63,13 +60,13 @@ class AppLoader {
                         console.error (
                             `\n\t\x1b[36msite ${argContent [ 1 ]} must be anthisnes.org or ouaie.be\x1b[0m\n`
                         );
-                        process.exit ( 1 );
+                        process.exitCode =  1 ;
                     }
                     theConfig.site = argContent [ 1 ];
                     break;
                 case '--version' :
                     console.error ( `\n\t\x1b[36mVersion : ${AppLoader.#version}\x1b[0m\n` );
-                    process.exit ( 0 );
+					process.exitCode = 1;
                     break;
                 default :
                     break;
@@ -79,28 +76,37 @@ class AppLoader {
 
         Object.freeze ( theConfig );
 
+        if ( ! DirManager.validateDir ( theConfig.srcDir ) ) {
+			console.error ( 'Invalid path for the --src parameter \x1b[31m%s\x1b[0m', theConfig.srcDir );
+			process.exitCode = 1;
+		}
+        if ( ! DirManager.validateDir ( theConfig.destDir ) ) {
+			console.error ( 'Invalid path for the --dest parameter \x1b[31m%s\x1b[0m', theConfig.destDir );
+			process.exitCode = 1;
+		}
     }
 
-	/**
-	Validate a path:
-	- Verify that the path exists on the computer
-	- verify that the path is a directory
-	- complete the path with a \
-	@param {String} path The path to validate
-	*/
+	#start ( ) {
 
-    #validatePath ( path ) {
-		let returnPath = path;
-		let pathSeparator = null;
-		try {
-			returnPath = fs.realpathSync ( path );
+		// start time
+		this.#startTime = process.hrtime.bigint ( );
+		console.info ( `\nStarting PhotoWeb ${AppLoader.#version}...\n` );
+	}
+
+	#end ( ) {
+		// end of the process
+		const deltaTime = process.hrtime.bigint ( ) - this.#startTime;
+
+        /* eslint-disable-next-line no-magic-numbers */
+		const execTime = String ( deltaTime / 1000000000n ) + '.' + String ( deltaTime % 1000000000n ).substring ( 0, 3 );
+		switch ( process.exitCode ){
+			case 0:
+				console.error ( `\nFiles generated in ${execTime} seconds in the folder \x1b[36m${theConfig.destDir}\n\n\x1b[0m` );
+				break;
+			default:
+				console.error ( `\n\x1b[31mProcess stopped due to errors\x1b[0m` );
+				break;
 		}
-		catch (err) {
-			console.error ( 'Invalid path for the --src or --dest parameter \x1b[31m%s\x1b[0m', returnPath );
-			process.exit ( AppLoader.#EXIT_BAD_PARAMETER );
-		}
-		returnPath += pathSeparator;
-		return returnPath;
 	}
 
 	/**
@@ -108,28 +114,24 @@ class AppLoader {
 	*/
 
     async loadApp ( ) {
+
+		this.#start ( );
+
         this.#createConfig ( );
-        this.#validatePath ( theConfig.srcDir );
-        this.#validatePath ( theConfig.destDir );
-
-		// start time
-		const startTime = process.hrtime.bigint ( );
-
-		// console.clear ( );
-		console.info ( `\nStarting PhotoWeb ${AppLoader.#version}...` );
-
-		// end of the process
-		const deltaTime = process.hrtime.bigint ( ) - startTime;
+		if ( 1 === process.exitCode ) {
+			this.#end ( );
+			return;
+		}
 
         const photoExifExtractor = new PhotoExifExctractor ( );
         const posts = await photoExifExtractor.exctract ( ) ;
         if ( ! posts ) {
-            process.exit ( 9 );
+            process.exitCode = 1;
+			this.#end ( );
+			return;
         }
 
-        /* eslint-disable-next-line no-magic-numbers */
-		const execTime = String ( deltaTime / 1000000000n ) + '.' + String ( deltaTime % 1000000000n ).substring ( 0, 3 );
-		console.error ( `\nFiles generated in ${execTime} seconds in the folder \x1b[36m${theConfig.destDir}\x1b[0m` );
+		this.#end ( 1 );
     }
 
     /**
