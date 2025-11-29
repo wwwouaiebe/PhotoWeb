@@ -1,0 +1,96 @@
+/*
+Copyright - 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
+
+This  program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation;
+either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+/**
+grid for the pagination div
+*/
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+#cyPagination {
+	display: grid;
+	grid-template-columns: 0.2fr 1fr 1fr 1fr 0.2fr;
+	gap: 1rem;
+	text-align: center;
+}
+
+#cyPaginationTopArrow {
+	grid-column-start: 3;
+	grid-column-end: 4;
+	grid-row-start: 1;
+	grid-row-end: 2;
+}
+
+#cyPaginationTop {
+	grid-column-start: 3;
+	grid-column-end: 4;
+	grid-row-start: 2;
+	grid-row-end: 3;
+}
+
+#cyPaginationNewestArrow {
+	grid-column-start: 1;
+	grid-column-end: 2;
+	grid-row-start: 3;
+	grid-row-end: 4;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+#cyPaginationNewest {
+	grid-column-start: 2;
+	grid-column-end: 3;
+	grid-row-start: 3;
+	grid-row-end: 4;
+}
+
+#cyPaginationSlideShow {
+	grid-column-start: 3;
+	grid-column-end: 4;
+	grid-row-start: 3;
+	grid-row-end: 4;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+#cyPaginationOldest {
+	grid-column-start: 4;
+	grid-column-end: 5;
+	grid-row-start: 3;
+	grid-row-end: 4;
+}
+
+#cyPaginationOldestArrow {
+	grid-column-start: 5;
+	grid-column-end: 6;
+	grid-row-start: 3;
+	grid-row-end: 4;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
+#cyPaginationCounter {
+	grid-column-start: 3;
+	grid-column-end: 4;
+	grid-row-start: 4;
+	grid-row-end: 5;
+}
+
+/* --- End of file --------------------------------------------------------------------------------------------------------- */

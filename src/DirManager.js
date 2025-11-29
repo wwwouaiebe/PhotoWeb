@@ -9,10 +9,10 @@ class DirManager {
 	@param {String} path The path to validate
 	*/
 
-    static validateDir ( dir ) {
+	static validateDir ( dir ) {
 		let returnDir = dir;
 		if ( '' === returnDir ) {
-            return null;
+			return null;
 		}
 
 		let pathSeparator = null;
@@ -30,12 +30,12 @@ class DirManager {
 		    returnDir += pathSeparator;
 		    return returnDir;
 		}
-		catch (err) {
-            return null;
+		catch {
+			return null;
 		}
 	}
 
-    static removeDir ( dir ) {
+	static removeDir ( dir ) {
 		try {
 
 			// Removing the complete directory
@@ -52,14 +52,14 @@ class DirManager {
 			// and then recreating
 			fs.mkdirSync ( dir );
 
-            return true;
+			return true;
 		}
 		catch {
 
 			// Sometime the cleaning fails due to opened files
-            return false;
+			return false;
 		}
-    }
+	}
 }
 
-export default DirManager
+export default DirManager;

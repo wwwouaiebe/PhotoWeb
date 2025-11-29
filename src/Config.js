@@ -31,41 +31,41 @@ Doc reviewed ...
 
 class Config {
 
-    /**
+	/**
      * The web site to build
      * @type {String}
      */
 
-    site;
+	site;
 
-    /**
+	/**
      * The destination directory
      * @type {String}
      */
 
-    get destDir ( ) { return './dest/' + this.site + '/htdocs/' } ;
+	get destDir ( ) { return './dest/' + this.site + '/htdocs/'; } ;
 
-    /**
-     * The sources directory 
+	/**
+     * The sources directory
      * @type {String}
      */
 
-    get srcDir ( ) { return './blogsSrc/' + this.site + '/' } ;
+	get srcDir ( ) { return './blogsSrc/' + this.site + '/'; } ;
 
-    /**
+	/**
      * The sources directory for posts
      * @type {String}
      */
 
-    get postsDir ( ) { return this.srcDir + 'posts/' };
+	get postsDir ( ) { return this.srcDir + 'posts/'; };
 
-    /**
+	/**
      * The constructor
      */
 
-    constructor ( ) {
-        this.site = '';
-    }
+	constructor ( ) {
+		this.site = '';
+	}
 }
 
 /**

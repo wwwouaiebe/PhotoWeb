@@ -23,9 +23,9 @@ Doc reviewed ...
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import theConfig from "./Config.js";
+import theConfig from './Config.js';
 import DirManager from './DirManager.js';
-import PhotoExifExctractor from './PhotoExifExtractor.js';
+import BlogBuilder from './BlogBuilder.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -48,43 +48,43 @@ class AppLoader {
 	Complete theConfig object from the app parameters
 	*/
 
-    #createConfig ( ) {
+	#createConfig ( ) {
 
 		process.exitCode = 0;
-        process.argv.forEach (
-            arg => {
-                const argContent = arg.split ( '=' );
-                switch ( argContent [ 0 ] ) {
-                case '--site' :
-                    if ( -1 === [ 'anthisnes.org', 'ouaie.be' ].indexOf ( argContent [ 1 ] ) ) {
-                        console.error (
-                            `\n\t\x1b[36msite ${argContent [ 1 ]} must be anthisnes.org or ouaie.be\x1b[0m\n`
-                        );
-                        process.exitCode =  1 ;
-                    }
-                    theConfig.site = argContent [ 1 ];
-                    break;
-                case '--version' :
-                    console.error ( `\n\t\x1b[36mVersion : ${AppLoader.#version}\x1b[0m\n` );
+		process.argv.forEach (
+			arg => {
+				const argContent = arg.split ( '=' );
+				switch ( argContent [ 0 ] ) {
+				case '--site' :
+					if ( -1 === [ 'anthisnes.org', 'ouaie.be' ].indexOf ( argContent [ 1 ] ) ) {
+						console.error (
+							`\n\t\x1b[36msite ${argContent [ 1 ]} must be anthisnes.org or ouaie.be\x1b[0m\n`
+						);
+						process.exitCode = 1;
+					}
+					theConfig.site = argContent [ 1 ];
+					break;
+				case '--version' :
+					console.error ( `\n\t\x1b[36mVersion : ${AppLoader.#version}\x1b[0m\n` );
 					process.exitCode = 1;
-                    break;
-                default :
-                    break;
-                }
-            }
-        );
+					break;
+				default :
+					break;
+				}
+			}
+		);
 
-        Object.freeze ( theConfig );
+		Object.freeze ( theConfig );
 
-        if ( ! DirManager.validateDir ( theConfig.srcDir ) ) {
+		if ( ! DirManager.validateDir ( theConfig.srcDir ) ) {
 			console.error ( 'Invalid path for the --src parameter \x1b[31m%s\x1b[0m', theConfig.srcDir );
 			process.exitCode = 1;
 		}
-        if ( ! DirManager.validateDir ( theConfig.destDir ) ) {
+		if ( ! DirManager.validateDir ( theConfig.destDir ) ) {
 			console.error ( 'Invalid path for the --dest parameter \x1b[31m%s\x1b[0m', theConfig.destDir );
 			process.exitCode = 1;
 		}
-    }
+	}
 
 	#start ( ) {
 
@@ -94,18 +94,19 @@ class AppLoader {
 	}
 
 	#end ( ) {
+
 		// end of the process
 		const deltaTime = process.hrtime.bigint ( ) - this.#startTime;
 
-        /* eslint-disable-next-line no-magic-numbers */
+		/* eslint-disable-next-line no-magic-numbers */
 		const execTime = String ( deltaTime / 1000000000n ) + '.' + String ( deltaTime % 1000000000n ).substring ( 0, 3 );
-		switch ( process.exitCode ){
-			case 0:
-				console.error ( `\nFiles generated in ${execTime} seconds in the folder \x1b[36m${theConfig.destDir}\n\n\x1b[0m` );
-				break;
-			default:
-				console.error ( `\n\x1b[31mProcess stopped due to errors\x1b[0m` );
-				break;
+		switch ( process.exitCode ) {
+		case 0 :
+			console.error ( `\nFiles generated in ${execTime} seconds in the folder \x1b[36m${theConfig.destDir}\n\n\x1b[0m` );
+			break;
+		default :
+			console.error ( '\n\x1b[31mProcess stopped due to errors\x1b[0m' );
+			break;
 		}
 	}
 
@@ -113,34 +114,29 @@ class AppLoader {
 	Load the app, searching all the needed infos to run the app correctly
 	*/
 
-    async loadApp ( ) {
+	async loadApp ( ) {
 
 		this.#start ( );
 
-        this.#createConfig ( );
+		this.#createConfig ( );
 		if ( 1 === process.exitCode ) {
 			this.#end ( );
 			return;
 		}
 
-        const photoExifExtractor = new PhotoExifExctractor ( );
-        const posts = await photoExifExtractor.exctract ( ) ;
-        if ( ! posts ) {
-            process.exitCode = 1;
-			this.#end ( );
-			return;
-        }
+		const blogBuilder = new BlogBuilder ( );
+		await blogBuilder.build ( );
 
 		this.#end ( 1 );
-    }
+	}
 
-    /**
+	/**
      * The constructor
      */
 
-    constructor ( ) {
-        Object.freeze ( this );
-    }
+	constructor ( ) {
+		Object.freeze ( this );
+	}
 }
 
 export default AppLoader;

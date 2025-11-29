@@ -31,61 +31,65 @@ Doc reviewed ...
 
 class Post {
 
-    /**
-     * The photo file name with the path and the extension 
+	/**
+     * The photo file name with the path and the extension
      * @type {String}
      */
 
-    photoFileName;
+	photoSrcFileName;
 
-    /**
+	get mediaPhotoFileName ( ) {
+		return '/medias/photos/' + this.photoSrcFileName.split ( '/' ).reverse ( ) [ 0 ].split ( '.' ) [ 0 ] + '.WebP';
+	}
+
+	/**
      * The width of the photo
      * @type {Number}
      */
 
-    photoWidth;
+	photoWidth;
 
-    /**
+	/**
      * The height of the photo
      * @type {Number}
      */
 
-    photoHeight;
+	photoHeight;
 
-    /**
+	/**
      * The html class name of the photo. Mist be 'Landscape', 'Square' or 'Portrait'
      * @type {Number}
      */
 
-    photoHtmlClassName;
+	photoHtmlClassName;
 
-    /**
+	/**
      * The technical infos of the photo
      * @type {String}
      */
 
-    photoTechInfo;
+	photoTechInfo;
 
-    /**
+	/**
      * The categories of the photo
      * @type {Array.<String>}
      */
 
-    categories;
+	categories;
 
-    /**
+	/**
      * The date of the photo in the ISO format
      * @type {String}
      */
 
-    photoIsoDate;
+	photoIsoDate;
 
-    /**
+	/**
      * The constructor
      */
 
-    constructor ( ) {
-    }
+	constructor ( ) {
+	}
 }
 
 export default Post;

@@ -9,6 +9,9 @@
   "version": "1.0.0",
   "keywords": [],
   "devDependencies": {
+        "eslint": "latest",
+        "grunt": "latest",
+        "grunt-eslint": "latest"
   },
   "dependencies": {
     "sharp": "latest",
@@ -22,6 +25,8 @@
     "node": ">=18.18.2"
   },
   "scripts": {
+    "debug": "node node_modules/grunt/bin/grunt debug",
+    "release": "node node_modules/grunt/bin/grunt release",
     "anthisnes": "node ./src/index.js --site=anthisnes.org",
     "ouaie": "node ./src/index.js --site=ouaie.be",
     "doc": "node ../ESSimpleDoc/bin/index.js --src=./src --dest=./docs/techDoc --validate=true"

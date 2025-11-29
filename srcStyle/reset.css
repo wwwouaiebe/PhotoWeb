@@ -15,15 +15,58 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-/*
-Changes:
-	- v1.0.0:
-		- created
-*/
+
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-import AppLoader from './AppLoader.js';
+/**
+reset all used elements to avoid problems with the browser css
+*/
 
-new AppLoader ( ).loadApp ( );
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+a,
+article,
+body,
+div,
+figure,
+figcaption,
+header,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+img,
+li,
+nav,
+object,
+p,
+section,
+span,
+sub,
+sup,
+ul {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	font-weight: normal;
+	vertical-align: baseline;
+	background: transparent;
+	box-sizing: border-box;
+	text-decoration: none;
+}
+
+body {
+	line-height: normal;
+	gap: 0;
+}
+
+ul {
+	list-style: disc;
+	list-style-position: inside;
+}
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

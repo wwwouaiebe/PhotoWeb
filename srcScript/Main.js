@@ -1,5 +1,5 @@
 /*
-Copyright - 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
+Copyright - 2021 2023 - wwwouaiebe - Contact: https://www.ouaie.be/
 
 This  program is free software;
 you can redistribute it and/or modify it under the terms of the
@@ -15,15 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
-/*
-Changes:
-	- v1.0.0:
-		- created
-*/
-/* ------------------------------------------------------------------------------------------------------------------------- */
 
-import AppLoader from './AppLoader.js';
+/* eslint-disable no-unused-vars */
 
-new AppLoader ( ).loadApp ( );
+import theSlideShow from './SlideShow.js';
+import theMailOpener from './MailOpener.js';
+import theThemeChanger from './ThemeChanger.js';
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

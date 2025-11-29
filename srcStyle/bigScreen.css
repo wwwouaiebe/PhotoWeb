@@ -1,0 +1,90 @@
+/*
+Copyright - 2021 - wwwouaiebe - Contact: https://www.ouaie.be/
+
+This  program is free software;
+you can redistribute it and/or modify it under the terms of the
+GNU General Public License as published by the Free Software Foundation;
+either version 3 of the License, or any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+/**
+overload for large screens
+*/
+
+/* ------------------------------------------------------------------------------------------------------------------------- */
+
+@media screen and (width >= 1281px) {
+	/**
+	grid definition
+	*/
+
+	body {
+		grid-template-columns: auto 972px;
+		grid-template-rows: 4rem auto;
+		column-gap: 3rem;
+		max-width: 1600px;
+		padding-bottom: 2rem;
+	}
+
+	header {
+		grid-column: 1 / 2;
+		grid-row: 1 / 2;
+	}
+
+	#cyNavCategory {
+		grid-column: 1 / 2;
+		grid-row: 2 / 3;
+	}
+
+	#cyNavTop {
+		grid-column: 1 / 2;
+		grid-row: 3 / 4;
+	}
+
+	#cyNavBottom {
+		grid-column: 1 / 2;
+		grid-row: 4 / 5;
+	}
+
+	section {
+		grid-column: 2 / 3;
+		grid-row: 1;
+	}
+
+	/**
+	Overload for pagination
+	*/
+
+	#cyPagination {
+		padding-bottom: 2rem;
+	}
+
+	/**
+	Overload for nav
+	*/
+
+	body > nav > p {
+		line-height: normal;
+	}
+
+	body > nav > p > span > a {
+		color: var(--link-hover-color);
+	}
+
+	body > nav > p > span > a:hover {
+		color: var(--link-color);
+	}
+}
+
+/* --- End of file --------------------------------------------------------------------------------------------------------- */
