@@ -3,12 +3,13 @@ import DirManager from './DirManager.js';
 import Blog from './Blog.js';
 import fs from 'fs';
 import PhotoExifExctractor from './PhotoExifExtractor.js';
+import Formater from './Formatter.js';
+import sharp from 'sharp';
+import CategoriesCollection from './CategoriesCollection.js';
 
 class BlogBuilder {
 
 	#blog;
-
-	#homePage;
 
 	#currentPosts = [];
 
@@ -18,41 +19,11 @@ class BlogBuilder {
 
 	#postsPerPage = 5;
 
-	#currentPostDate = '';
+	#categoriesCollection;
 
-	#slideShowData = '';
-
-	#formatDate ( isoDate ) {
-		const tmpDate = new Date ( isoDate );
-		const days = [ 'dimanche ', 'lundi ', 'mardi ', 'mercredi ', 'jeudi ', 'vendredi ', 'samedi ' ];
-		const months = [
-			' janvier ',
-			' février ',
-			' mars ',
-			' avril ',
-			' mai ',
-			' juin  ',
-			' juillet ',
-			' août ',
-			' septembre ',
-			' octobre ',
-			' novembre ',
-			'décembre '
-		];
-		return days [ tmpDate.getDay ( ) ] + tmpDate.getDate ( ) + months [ tmpDate. getMonth ( ) ] + tmpDate.getFullYear ( );
-	}
-
-	#formatDateTime ( isoDate ) {
-		// eslint-disable-next-line no-unused-vars
-		const [ hours, minutes, seconds ] = isoDate.split ( 'T' ) [ 1 ].split ( ':' ).map ( value => Number ( value ) );
-		return this.#formatDate ( isoDate ) + ' ' +
-            hours + ( 1 < hours ? ' heures ' : ' heure ' ) + minutes;
-	}
-
-	#buildPostHtml ( post ) {
-		let postInfos = post.categories.toString ( ) + ', ' + this.#formatDateTime ( post.photoIsoDate );
-		let postHtml =
-            '<article"><figure><img class="cy' + post.photoHtmlClassName +
+	#buildArticleHtml ( post ) {
+		let postInfos = post.categories.toString ( ) + ', ' + Formater.formatDateTime ( post.photoIsoDate );
+		return '<article"><figure><img class="cy' + post.photoHtmlClassName +
             '" width="' + post.photoWidth + '" height="' + post.photoHeight +
             '" src="' + post.mediaPhotoFileName + '"' +
             '" title="' + postInfos +
@@ -60,20 +31,20 @@ class BlogBuilder {
             '" <figcaption>' +
             '<p class="cyPictureInfo"><span>📷</span><span>' + post.photoTechInfo + '</span></p>' +
             '</figcaption></figure></article>';
-		return postHtml;
 	}
 
-	#buildPageHtml ( ) {
-		let postsHtml = '';
+	#buildArticlesHtml ( ) {
+		let ArticlesHtml = '';
 
 		this.#currentPosts.forEach (
-			currentPost => { postsHtml += this.#buildPostHtml ( currentPost ); }
+			currentPost => { ArticlesHtml += this.#buildArticleHtml ( currentPost ); }
 		);
-		this.#htmlString = this.#htmlString.replaceAll ( '{{PhotoWeb:blogPosts}}', postsHtml );
 
+		return ArticlesHtml;
 	}
 
-	#buildHomeHtml ( blogPosts ) {
+	#buildPageHtml ( blogPosts ) {
+		this.#buildSlideShowData ( blogPosts );
 		this.#currentPageNumber = 0;
 		while ( this.#currentPageNumber < Math.ceil ( blogPosts.length / this.#postsPerPage ) ) {
 			this.#htmlString = fs.readFileSync ( './html/home.html', { encoding : 'utf8' } );
@@ -82,7 +53,6 @@ class BlogBuilder {
 				( this.#currentPageNumber + 1 ) * this.#postsPerPage
 			);
 			this.#currentPageNumber ++;
-			this.#buildPageHtml ( );
 
 			this.#htmlString = this.#htmlString
 				.replaceAll ( /{{PhotoWeb:blogAuthor}}/g, this.#blog.blogAuthor )
@@ -91,7 +61,8 @@ class BlogBuilder {
 				.replaceAll ( /{{PhotoWeb:blogHeading}}/g, this.#blog.blogHeading )
 				.replaceAll ( /{{PhotoWeb:blogKeywords}}/g, this.#blog.blogKeywords )
 				.replaceAll ( /{{PhotoWeb:blogRobots}}/g, this.#blog.blogRobots )
-				.replaceAll ( /{{PhotoWeb:SlideShowData}}/g, this.#slideShowData );
+				.replaceAll ( /{{PhotoWeb:SlideShowData}}/g, this.#buildSlideShowData ( blogPosts ) )
+				.replaceAll ( /{{PhotoWeb:articles}}/g, this.#buildArticlesHtml ( ) );
 			if ( 1 === this.#currentPageNumber ) {
 				fs.writeFileSync ( theConfig.destDir + 'index.html', this.#htmlString );
 			}
@@ -111,7 +82,7 @@ class BlogBuilder {
 				slideShowDataArray.push (
 					{
 						scr : post.mediaPhotoFileName,
-						date : this.#formatDateTime ( post.photoIsoDate ),
+						date : Formater.formatDateTime ( post.photoIsoDate ),
 						exif : post.photoTechInfo,
 						cat : post.categories.toString ( ),
 						class : 'cy' + post.photoHtmlClassName
@@ -119,9 +90,28 @@ class BlogBuilder {
 				);
 			}
 		);
+		return JSON.stringify ( slideShowDataArray );
 
-		this.#slideShowData = JSON.stringify ( slideShowDataArray );
+	}
 
+	async #copyPhotos ( ) {
+		const destDir = theConfig.destDir + '/medias/photos/';
+		fs.mkdirSync ( destDir, { recursive : true } );
+		this.#blog.blogPosts.forEach (
+			async post => {
+				await sharp ( post.photoSrcFileName )
+					.keepIccProfile ( )
+					.withExif (
+						{
+							IFD0 : {
+								Copyright : 'wwwouaiebe contact https://www.ouaie.be/',
+								Artist : 'wwwouaiebe contact https://www.ouaie.be/'
+							}
+						}
+					)
+					.toFile ( destDir + post.photoIsoDate.replaceAll ( /:/g, '' ) + '.WebP' );
+			}
+		);
 	}
 
 	async build ( ) {
@@ -142,9 +132,11 @@ class BlogBuilder {
 			return;
 		}
 
-		this.#buildSlideShowData ( this.#blog.blogPosts );
+		this.#categoriesCollection = new CategoriesCollection ( this.#blog.blogPosts );
 
-		this.#buildHomeHtml ( this.#blog.blogPosts );
+		this.#copyPhotos ( );
+
+		this.#buildPageHtml ( this.#blog.blogPosts );
 
 		process.exitCode = 0;
 

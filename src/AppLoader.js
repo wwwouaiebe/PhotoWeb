@@ -82,6 +82,7 @@ class AppLoader {
 		}
 		if ( ! DirManager.validateDir ( theConfig.destDir ) ) {
 			console.error ( 'Invalid path for the --dest parameter \x1b[31m%s\x1b[0m', theConfig.destDir );
+			crossOriginIsolated.log ( 'c' );
 			process.exitCode = 1;
 		}
 	}

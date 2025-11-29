@@ -93,9 +93,12 @@ module.exports = function ( grunt ) {
 
 	grunt.loadNpmTasks ( 'grunt-eslint' );
 	grunt.loadTasks ( '../Grunt-wwwouaiebe-BuildNumber/tasks/' );
+
+	/*
 	grunt.loadNpmTasks ( 'grunt-rollup' );
 	grunt.loadNpmTasks ( 'grunt-terser' );
 	grunt.loadNpmTasks ( 'grunt-contrib-copy' );
+	*/
 
 	grunt.registerTask (
 		'hello',
