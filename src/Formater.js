@@ -31,7 +31,7 @@ class Formater {
 			' septembre ',
 			' octobre ',
 			' novembre ',
-			'décembre '
+			' décembre '
 		];
 		return days [ tmpDate.getDay ( ) ] + tmpDate.getDate ( ) + months [ tmpDate. getMonth ( ) ] + tmpDate.getFullYear ( );
 	}

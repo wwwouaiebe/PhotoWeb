@@ -43,21 +43,23 @@ class Config {
      * @type {String}
      */
 
-	get destDir ( ) { return './dest/' + this.site + '/htdocs/'; } ;
+	get destDir ( ) { return './dest/' + this.site + '/'; }
 
 	/**
      * The sources directory
      * @type {String}
      */
 
-	get srcDir ( ) { return './blogsSrc/' + this.site + '/'; } ;
+	get srcDir ( ) { return './blogsSrc/' + this.site + '/'; }
 
 	/**
      * The sources directory for posts
      * @type {String}
      */
 
-	get postsDir ( ) { return this.srcDir + 'posts/'; };
+	get postsDir ( ) { return this.srcDir + 'posts/'; }
+
+	get distDir ( ) { return './dist/'; }
 
 	/**
      * The constructor

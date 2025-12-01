@@ -12,6 +12,31 @@ class CategoriesCollection {
 		return this.#categories;
 	}
 
+	getParentCategories ( ) {
+		const parentCategories = [];
+		this.#categories.forEach (
+			category => {
+				if ( ! category.parent ) {
+					parentCategories.push ( category );
+				}
+			}
+		);
+		parentCategories.sort (
+			( first, second ) => {
+				if ( first.name > second.name ) {
+					return 1;
+				}
+				if ( first.name < second.name ) {
+					return -1;
+				}
+				if ( first.name === second.name ) {
+					return 0;
+				}
+			}
+		);
+		return parentCategories;
+	}
+
 	#setCategory ( parentName, childrenName ) {
 		let parentCategory = this.#categories.get ( parentName );
 		if ( ! parentCategory ) {

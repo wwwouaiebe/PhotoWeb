@@ -1,0 +1,12 @@
+h1 {
+	font-size:5em;
+	color: red;
+	font-weight: bolder;
+	margin:3em;
+}
+
+p {
+	margin-left : 25em;
+	margin-right: 25em;
+	text-align: center;
+}
