@@ -1,5 +1,7 @@
 import fs from 'fs';
 import theConfig from './Config.js';
+import CategoriesCollection from './CategoriesCollection.js';
+import PhotoExifExtractor from './PhotoExifExtractor.js';
 
 class Blog {
 
@@ -11,6 +13,8 @@ class Blog {
 	#blogRobots;
 	#blogPosts;
 	#isValid;
+	#blogCategories;
+	#areDataLoaded;
 
 	get blogAuthor ( ) { return this.#blogAuthor; }
 	get blogTitle ( ) { return this.#blogTitle; }
@@ -19,10 +23,21 @@ class Blog {
 	get blogKeywords ( ) { return this.#blogKeywords; }
 	get blogRobots ( ) { return this.#blogRobots; }
 	get blogPosts ( ) { return this.#blogPosts; }
-	get isValid ( ) { return this.#isValid; }
+	get isValid ( ) { return this.#isValid && this.#areDataLoaded; }
+	get blogCategories ( ) { return this.#blogCategories; }
 
-	constructor ( blogPosts ) {
-		this.#isValid = true;
+	getCategoryPosts ( categoryName ) {
+		return this.#blogPosts.filter (
+			post => post.categories.includes ( categoryName )
+		);
+	}
+
+	async loadData ( ) {
+		if ( this.#areDataLoaded ) {
+			return;
+		}
+		const photoExifExtractor = new PhotoExifExtractor ( );
+		this.#blogPosts = await photoExifExtractor.exctract ( );
 		try {
 			const blogData = JSON.parse (
 				fs.readFileSync ( theConfig.srcDir + 'blog.json', { encoding : 'utf8' } )
@@ -33,7 +48,6 @@ class Blog {
 			this.#blogHeading = blogData.blogHeading;
 			this.#blogKeywords = blogData.blogKeywords;
 			this.#blogRobots = blogData.blogRobots;
-			this.#blogPosts = blogPosts;
 			this.#blogPosts.sort (
 				( first, second ) => {
 					if ( first.photoIsoDate > second.photoIsoDate ) {
@@ -45,12 +59,24 @@ class Blog {
 					return 0;
 				}
 			);
-			this.#isValid &&= blogPosts;
+
+			this.#blogCategories = new CategoriesCollection ( this.#blogPosts );
+			this.#isValid &&= this.#blogPosts;
 		}
-		catch {
+		catch ( err ) {
+			console.error ( err );
 			this.#isValid = false;
 		}
+		this.#areDataLoaded = true;
+	}
+
+	constructor ( ) {
+		this.#isValid = true;
+		this.#areDataLoaded = false;
+
 	}
 }
 
-export default Blog;
+const theBlog = new Blog ( );
+
+export default theBlog;
