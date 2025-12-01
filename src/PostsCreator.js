@@ -35,7 +35,7 @@ import Post from './Post.js';
  */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
-class PhotoExifExctractor {
+class PostsCreator {
 
 	/**
      * An array with the posts
@@ -149,7 +149,7 @@ class PhotoExifExctractor {
      * Extract the date from the photo exif data or from the file name
      */
 
-	#exctractDate ( ) {
+	#extractDate ( ) {
 
 		this.#photoIsoDate = null;
 
@@ -189,7 +189,7 @@ class PhotoExifExctractor {
      * Extract the dimensions from the photo exif data
      */
 
-	#exctractPhotoDimensions ( ) {
+	#extractPhotoDimensions ( ) {
 		this.#photoWidth = this.#exifMetaData?.Photo?.PixelXDimension || 0;
 		this.#photoHeight = this.#exifMetaData?.Photo?.PixelYDimension || 0;
 		if ( 0 === this.#photoWidth || 0 === this.#photoHeight ) {
@@ -226,7 +226,7 @@ class PhotoExifExctractor {
 
 	/**
      * Find all the files in a directory and it's subdirectory
-     * For each file, exctracts the exif data and creates a post
+     * For each file, extracts the exif data and creates a post
      * Eventually rename the file with the date found in the exif data
      * @param {} srcDir
      */
@@ -249,9 +249,9 @@ class PhotoExifExctractor {
 				this.#photoSrcFileName = srcDir + fileNames [ filesCounter ];
 				const metaData = await sharp ( this.#photoSrcFileName ).metadata ( );
 				this.#exifMetaData = exif ( metaData.exif );
-				this.#exctractDate ( );
+				this.#extractDate ( );
 				this.#extractTechInfos ( );
-				this.#exctractPhotoDimensions ( );
+				this.#extractPhotoDimensions ( );
 
 				// Renaming the file if needed
 				if (
@@ -270,11 +270,11 @@ class PhotoExifExctractor {
 	}
 
 	/**
-     * Strat the data extraction
+     * Start the data extraction
      * @returns {Array.<Post> | boolean} An array with the posts or false if errors found
      */
 
-	async exctract ( ) {
+	async extract ( ) {
 
 		await this.#findFiles ( theConfig.postsDir );
 
@@ -309,6 +309,6 @@ class PhotoExifExctractor {
 	}
 }
 
-export default PhotoExifExctractor;
+export default PostsCreator;
 
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

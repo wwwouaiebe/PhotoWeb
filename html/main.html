@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" >
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+		<meta name="ROBOTS" content="{{PhotoWeb:blogRobots}}" >
+		<meta name="author" content="{{PhotoWeb:blogAuthor}}" >
+		<meta name="color-scheme" content="dark light" >
+		<link href="/styles/PhotoWeb.min.css" type="text/css" rel="stylesheet" media="screen" crossorigin="anonymous">
+		<link rel="preload" as="font" href="/styles/opensans-regular.woff2" type="font/woff2" crossorigin>
+		<script async type="module" src="/scripts/Main.js" crossorigin="anonymous"></script>
+		<title>{{PhotoWeb:blogTitle}}</title>
+		<meta name="description" lang="fr" content="{{PhotoWeb:blogTitle}} - {{PhotoWeb:blogDescription}}">
+		<meta name="keywords" lang="fr" content="{{PhotoWeb:blogKeywords}}">
+		<script id="cySlideShowData" type="application/json">
+			{{PhotoWeb:SlideShowData}}
+		</script>
+	</head>
+	<body>
+		<header><div class="cySiteName"><a href="/main/1/" title="Retourner à l'accueil">{{PhotoWeb:blogHeading}}</a></div></header>
+		<section>
+			{{PhotoWeb:articles}}
+			{{PhotoWeb:pagination}}
+ 		</section>
+		<nav id="cyNavTop" >{{PhotoWeb:nav}}</nav>
+		<nav id="cyNavBottom" ></nav>
+	</body>
+</html>

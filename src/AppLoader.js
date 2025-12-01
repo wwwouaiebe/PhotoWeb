@@ -25,7 +25,7 @@ Doc reviewed ...
 
 import theConfig from './Config.js';
 import DirManager from './DirManager.js';
-import BlogBuilder from './BlogBuilder.js';
+import BlogFilesBuilder from './BlogFilesBuilder.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -125,8 +125,7 @@ class AppLoader {
 			return;
 		}
 
-		const blogBuilder = new BlogBuilder ( );
-		await blogBuilder.build ( );
+		await new BlogFilesBuilder ( ).build ( );
 
 		this.#end ( 1 );
 	}

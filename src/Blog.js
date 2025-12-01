@@ -1,7 +1,8 @@
 import fs from 'fs';
 import theConfig from './Config.js';
 import CategoriesCollection from './CategoriesCollection.js';
-import PhotoExifExtractor from './PhotoExifExtractor.js';
+import PostsCreator from './PostsCreator.js';
+import PagesCreator from './PagesCreator.js';
 
 class Blog {
 
@@ -12,9 +13,11 @@ class Blog {
 	#blogKeywords;
 	#blogRobots;
 	#blogPosts;
-	#isValid;
+	#blogPages;
 	#blogCategories;
+
 	#areDataLoaded;
+	#isValid;
 
 	get blogAuthor ( ) { return this.#blogAuthor; }
 	get blogTitle ( ) { return this.#blogTitle; }
@@ -23,6 +26,7 @@ class Blog {
 	get blogKeywords ( ) { return this.#blogKeywords; }
 	get blogRobots ( ) { return this.#blogRobots; }
 	get blogPosts ( ) { return this.#blogPosts; }
+	get blogPages ( ) { return this.#blogPages; }
 	get isValid ( ) { return this.#isValid && this.#areDataLoaded; }
 	get blogCategories ( ) { return this.#blogCategories; }
 
@@ -36,8 +40,8 @@ class Blog {
 		if ( this.#areDataLoaded ) {
 			return;
 		}
-		const photoExifExtractor = new PhotoExifExtractor ( );
-		this.#blogPosts = await photoExifExtractor.exctract ( );
+		this.#blogPosts = await new PostsCreator ( ).extract ( );
+		this.#blogPages = await new PagesCreator ( ).extract ( );
 		try {
 			const blogData = JSON.parse (
 				fs.readFileSync ( theConfig.srcDir + 'blog.json', { encoding : 'utf8' } )

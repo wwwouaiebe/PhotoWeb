@@ -3,7 +3,7 @@ import fs from 'fs';
 import theConfig from './Config.js';
 import theBlog from './Blog.js';
 
-class HtmlBuilder {
+class HtmlFilesBuilder {
 
    	#currentPosts = [];
 
@@ -17,7 +17,9 @@ class HtmlBuilder {
 
 	#postsPerPage = 5;
 
-	#nav;
+	#navHtml;
+
+	get navHtml ( ) { return this.#navHtml; }
 
 	get rootDestDir ( ) { return ''; }
 
@@ -55,8 +57,8 @@ class HtmlBuilder {
 	}
 
 	buildNavHtml ( ) {
-		this.#nav = fs.readFileSync ( theConfig.srcDir + 'menu/menu.html', { encoding : 'utf8' } );
-		this.#nav = this.#nav.replaceAll ( /{{PhotoWeb:navTop}}/g, this.#buildNavTopHtml ( ) );
+		this.#navHtml = fs.readFileSync ( theConfig.srcDir + 'menu/menu.html', { encoding : 'utf8' } );
+		this.#navHtml = this.#navHtml.replaceAll ( /{{PhotoWeb:navTop}}/g, this.#buildNavTopHtml ( ) );
 	}
 
 	#buildNavTopHtml ( ) {
@@ -78,12 +80,12 @@ class HtmlBuilder {
 		if ( childrenCategory.parent ) {
 			parentCategory = theBlog.blogCategories.getCategory ( childrenCategory.parent );
 			categoryLinksHtml =
-			    '<a href="/cat/' + Formater.toUrlString ( parentCategory.name ) + '/1/' +  
+			    '<a href="/cat/' + Formater.toUrlString ( parentCategory.name ) + '/1/' +
                 '/" title="' + parentCategory.name + '" >' +
 			    parentCategory.name + '</a> ';
 		}
 		categoryLinksHtml +=
-			'<a href="/cat/' + Formater.toUrlString ( childrenCategory.name ) + '/1/' + 
+			'<a href="/cat/' + Formater.toUrlString ( childrenCategory.name ) + '/1/' +
             '/" title="' + childrenCategory.name + '" >' +
 			childrenCategory.name + '</a> ';
 
@@ -132,7 +134,7 @@ class HtmlBuilder {
  		this.#currentPageNumber = 0;
 		this.#totalPagesNumber = Math.ceil ( blogPosts.length / this.#postsPerPage );
 		while ( this.#currentPageNumber < this.#totalPagesNumber ) {
-			this.#htmlString = fs.readFileSync ( './html/page.html', { encoding : 'utf8' } );
+			this.#htmlString = fs.readFileSync ( './html/main.html', { encoding : 'utf8' } );
 			this.#currentPosts = blogPosts.slice (
 				this.#currentPageNumber * this.#postsPerPage,
 				( this.#currentPageNumber + 1 ) * this.#postsPerPage
@@ -149,7 +151,7 @@ class HtmlBuilder {
 				.replaceAll ( /{{PhotoWeb:SlideShowData}}/g, this.#buildSlideShowData ( blogPosts ) )
 				.replaceAll ( /{{PhotoWeb:articles}}/g, this.#buildArticlesHtml ( ) )
 				.replaceAll ( /{{PhotoWeb:pagination}}/g, this.#buildPaginationHtml ( ) )
-				.replaceAll ( /{{PhotoWeb:nav}}/g, this.#nav );
+				.replaceAll ( /{{PhotoWeb:nav}}/g, this.navHtml );
 
 			fs.mkdirSync ( theConfig.destDir + this.rootDestDir + this.#currentPageNumber + '/', { recursive : true } );
 
@@ -187,4 +189,4 @@ class HtmlBuilder {
 
 }
 
-export default HtmlBuilder;
+export default HtmlFilesBuilder;

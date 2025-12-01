@@ -3,10 +3,11 @@ import DirManager from './DirManager.js';
 import theBlog from './Blog.js';
 import fs from 'fs';
 import sharp from 'sharp';
-import MainHtmlBuilder from './MainHtmlBuilder.js';
-import CatHtmlBuilder from './CatHtmlBuilder.js';
+import MainHtmlFilesBuilder from './MainHtmlFilesBuilder.js';
+import CatHtmlFilesBuilder from './CatHtmlFilesBuilder.js';
+import PagesHtmlFilesBuilder from './PagesHtmlFilesBuilder.js';
 
-class BlogBuilder {
+class BlogFilesBuilder {
 
 	async #copyPhotos ( ) {
 		const destDir = theConfig.destDir + '/medias/photos/';
@@ -70,9 +71,9 @@ class BlogBuilder {
 
 		fs.copyFileSync ( './html/home.html', theConfig.destDir + 'index.html' );
 
-		new MainHtmlBuilder ( ).build ( );
-		new CatHtmlBuilder ( ).build ( );
-
+		new MainHtmlFilesBuilder ( ).build ( );
+		new CatHtmlFilesBuilder ( ).build ( );
+		new PagesHtmlFilesBuilder ( ).build ( );
 		process.exitCode = 0;
 	}
 
@@ -82,4 +83,4 @@ class BlogBuilder {
 	}
 }
 
-export default BlogBuilder;
+export default BlogFilesBuilder;

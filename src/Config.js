@@ -59,6 +59,8 @@ class Config {
 
 	get postsDir ( ) { return this.srcDir + 'posts/'; }
 
+	get pagesDir ( ) { return this.srcDir + 'pages/'; }
+
 	get distDir ( ) { return './dist/'; }
 
 	/**

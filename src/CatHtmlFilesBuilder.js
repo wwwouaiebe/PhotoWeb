@@ -1,8 +1,8 @@
-import HtmlBuilder from './HtmlBuilder.js';
+import HtmlFilesBuilder from './HtmlFilesBuilder.js';
 import theBlog from './Blog.js';
 import Formater from './Formater.js';
 
-class CatHtmlBuilder extends HtmlBuilder {
+class CatHtmlFilesBuilder extends HtmlFilesBuilder {
 
 	#category;
 
@@ -24,4 +24,4 @@ class CatHtmlBuilder extends HtmlBuilder {
 
 }
 
-export default CatHtmlBuilder;
+export default CatHtmlFilesBuilder;
