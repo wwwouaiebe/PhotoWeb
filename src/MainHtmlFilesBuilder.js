@@ -6,7 +6,7 @@ class MainHtmlFilesBuilder extends HtmlFilesBuilder {
 	get rootDestDir ( ) { return 'main/'; }
 
 	build ( ) {
-		this.buildNavHtml ( );
+		super.build ( );
 		this.buildPagesHtml ( theBlog.blogPosts );
 	}
 

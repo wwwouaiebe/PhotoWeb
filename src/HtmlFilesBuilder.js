@@ -7,8 +7,6 @@ class HtmlFilesBuilder {
 
    	#currentPosts = [];
 
-	#htmlString;
-
 	#currentPageNumber;
 
 	#currentFormatedDate;
@@ -19,11 +17,15 @@ class HtmlFilesBuilder {
 
 	#navHtml;
 
+	#blogPosts;
+
+	get blogPosts ( ) { return this.#blogPosts; }
+
 	get navHtml ( ) { return this.#navHtml; }
 
 	get rootDestDir ( ) { return ''; }
 
-	#buildPaginationHtml ( ) {
+	buildPaginationHtml ( ) {
 		let returnValue =
 			'<div id="cyPagination">' +
 			'<div id="cyPaginationTopArrow">⮝</div>' +
@@ -92,7 +94,7 @@ class HtmlFilesBuilder {
 		return categoryLinksHtml;
 	}
 
-	#buildArticleHtml ( post ) {
+	buildArticleHtml ( post ) {
 		let postFormatedDate = Formater.formatDate ( post.photoIsoDate );
 		let formatedDateTime = Formater.formatDateTime ( post.photoIsoDate );
 		let postInfos = post.categories.toString ( ) + ', ' + formatedDateTime;
@@ -118,53 +120,62 @@ class HtmlFilesBuilder {
 		return articleHtml;
 	}
 
-	#buildArticlesHtml ( ) {
+	buildArticlesHtml ( ) {
 
 		this.#currentFormatedDate = '';
 		let ArticlesHtml = '';
 
 		this.#currentPosts.forEach (
-			currentPost => { ArticlesHtml += this.#buildArticleHtml ( currentPost ); }
+			currentPost => { ArticlesHtml += this.buildArticleHtml ( currentPost ); }
 		);
 
 		return ArticlesHtml;
 	}
 
+	get htmlStringFile ( ) {
+		return './html/main.html';
+	}
+
+	buildHtmlString ( ) {
+		let htmlString = fs.readFileSync ( this.htmlStringFile, { encoding : 'utf8' } );
+		htmlString = htmlString
+			.replaceAll ( /{{PhotoWeb:blogAuthor}}/g, theBlog.blogAuthor )
+			.replaceAll ( /{{PhotoWeb:blogTitle}}/g, theBlog.blogTitle )
+			.replaceAll ( /{{PhotoWeb:blogDescription}}/g, theBlog.blogDescription )
+			.replaceAll ( /{{PhotoWeb:blogHeading}}/g, theBlog.blogHeading )
+			.replaceAll ( /{{PhotoWeb:blogKeywords}}/g, theBlog.blogKeywords )
+			.replaceAll ( /{{PhotoWeb:blogRobots}}/g, theBlog.blogRobots )
+			.replaceAll ( /{{PhotoWeb:SlideShowData}}/g, this.buildSlideShowData ( ) )
+			.replaceAll ( /{{PhotoWeb:articles}}/g, this.buildArticlesHtml ( ) )
+			.replaceAll ( /{{PhotoWeb:pagination}}/g, this.buildPaginationHtml ( ) )
+			.replaceAll ( /{{PhotoWeb:nav}}/g, this.navHtml );
+
+		return htmlString;
+	}
+
 	buildPagesHtml ( blogPosts ) {
+		this.#blogPosts = blogPosts;
  		this.#currentPageNumber = 0;
 		this.#totalPagesNumber = Math.ceil ( blogPosts.length / this.#postsPerPage );
 		while ( this.#currentPageNumber < this.#totalPagesNumber ) {
-			this.#htmlString = fs.readFileSync ( './html/main.html', { encoding : 'utf8' } );
 			this.#currentPosts = blogPosts.slice (
 				this.#currentPageNumber * this.#postsPerPage,
 				( this.#currentPageNumber + 1 ) * this.#postsPerPage
 			);
 			this.#currentPageNumber ++;
 
-			this.#htmlString = this.#htmlString
-				.replaceAll ( /{{PhotoWeb:blogAuthor}}/g, theBlog.blogAuthor )
-				.replaceAll ( /{{PhotoWeb:blogTitle}}/g, theBlog.blogTitle )
-				.replaceAll ( /{{PhotoWeb:blogDescription}}/g, theBlog.blogDescription )
-				.replaceAll ( /{{PhotoWeb:blogHeading}}/g, theBlog.blogHeading )
-				.replaceAll ( /{{PhotoWeb:blogKeywords}}/g, theBlog.blogKeywords )
-				.replaceAll ( /{{PhotoWeb:blogRobots}}/g, theBlog.blogRobots )
-				.replaceAll ( /{{PhotoWeb:SlideShowData}}/g, this.#buildSlideShowData ( blogPosts ) )
-				.replaceAll ( /{{PhotoWeb:articles}}/g, this.#buildArticlesHtml ( ) )
-				.replaceAll ( /{{PhotoWeb:pagination}}/g, this.#buildPaginationHtml ( ) )
-				.replaceAll ( /{{PhotoWeb:nav}}/g, this.navHtml );
-
 			fs.mkdirSync ( theConfig.destDir + this.rootDestDir + this.#currentPageNumber + '/', { recursive : true } );
 
 			fs.writeFileSync (
 				theConfig.destDir + this.rootDestDir + this.#currentPageNumber + '/' + 'index.html',
-				this.#htmlString
+				this.buildHtmlString ( )
 			);
 		}
 	}
 
-	#buildSlideShowData ( blogPosts ) {
+	buildSlideShowData ( ) {
 		let slideShowDataArray = [];
-		blogPosts.forEach (
+		this.blogPosts.forEach (
 			post => {
 				slideShowDataArray.push (
 					{
@@ -181,6 +192,7 @@ class HtmlFilesBuilder {
 	}
 
 	build ( ) {
+		this.buildNavHtml ( );
 	}
 
 	constructor ( ) {

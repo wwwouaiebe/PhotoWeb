@@ -6,6 +6,7 @@ import sharp from 'sharp';
 import MainHtmlFilesBuilder from './MainHtmlFilesBuilder.js';
 import CatHtmlFilesBuilder from './CatHtmlFilesBuilder.js';
 import PagesHtmlFilesBuilder from './PagesHtmlFilesBuilder.js';
+import PostsHtmlFilesBuilder from './PostsHtmlFilesBuilder.js';
 
 class BlogFilesBuilder {
 
@@ -74,6 +75,7 @@ class BlogFilesBuilder {
 		new MainHtmlFilesBuilder ( ).build ( );
 		new CatHtmlFilesBuilder ( ).build ( );
 		new PagesHtmlFilesBuilder ( ).build ( );
+		new PostsHtmlFilesBuilder ( ).build ( );
 		process.exitCode = 0;
 	}
 

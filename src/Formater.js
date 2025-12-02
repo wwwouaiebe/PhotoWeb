@@ -16,6 +16,10 @@ class Formater {
 		return returnValue;
 	}
 
+	static isoDateToUrlString ( isoDate ) {
+		return isoDate.replaceAll ( /:/g, '' );
+	}
+
 	static formatDate ( isoDate ) {
 		const tmpDate = new Date ( isoDate );
 		const days = [ 'dimanche ', 'lundi ', 'mardi ', 'mercredi ', 'jeudi ', 'vendredi ', 'samedi ' ];
