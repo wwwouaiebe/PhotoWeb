@@ -132,12 +132,8 @@ class HtmlFilesBuilder {
 		return ArticlesHtml;
 	}
 
-	get htmlStringFile ( ) {
-		return './html/main.html';
-	}
-
 	buildHtmlString ( ) {
-		let htmlString = fs.readFileSync ( this.htmlStringFile, { encoding : 'utf8' } );
+		let htmlString = fs.readFileSync ( './html/page.html', { encoding : 'utf8' } );
 		htmlString = htmlString
 			.replaceAll ( /{{PhotoWeb:blogAuthor}}/g, theBlog.blogAuthor )
 			.replaceAll ( /{{PhotoWeb:blogTitle}}/g, theBlog.blogTitle )

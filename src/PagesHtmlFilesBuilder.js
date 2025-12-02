@@ -6,18 +6,12 @@ import theConfig from './Config.js';
 
 class PagesHtmlFilesBuilder extends SinglePageHtmlFilesBuilder {
 
-	#htmlString;
-
 	#page;
 
 	get rootDestDir ( ) { return 'pages/'; }
 
 	buildArticlesHtml ( ) {
 		return '<h1>' + this.#page.pageName + '</h1>' + this.#page.pageContent;
-	}
-
-	get htmlStringFile ( ) {
-		return './html/page.html';
 	}
 
 	buildPagesHtml ( page ) {

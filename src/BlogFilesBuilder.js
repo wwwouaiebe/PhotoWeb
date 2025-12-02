@@ -7,6 +7,8 @@ import MainHtmlFilesBuilder from './MainHtmlFilesBuilder.js';
 import CatHtmlFilesBuilder from './CatHtmlFilesBuilder.js';
 import PagesHtmlFilesBuilder from './PagesHtmlFilesBuilder.js';
 import PostsHtmlFilesBuilder from './PostsHtmlFilesBuilder.js';
+import AllCatsHtmlFilesBuilder from './AllCatsHtmlFilesBuilder.js';
+import AllDatesHtmlFilesBuilder from './AllDatesHtmlFilesBuilder.js';
 
 class BlogFilesBuilder {
 
@@ -26,6 +28,18 @@ class BlogFilesBuilder {
 						}
 					)
 					.toFile ( destDir + post.photoIsoDate.replaceAll ( /:/g, '' ) + '.WebP' );
+				await sharp ( post.photoSrcFileName )
+					.keepIccProfile ( )
+					.withExif (
+						{
+							IFD0 : {
+								Copyright : 'wwwouaiebe contact https://www.ouaie.be/',
+								Artist : 'wwwouaiebe contact https://www.ouaie.be/'
+							}
+						}
+					)
+					.resize ( { height : 162 } )
+					.toFile ( ( destDir + post.photoIsoDate.replaceAll ( /:/g, '' ) + '_s.WebP' ) );
 			}
 		);
 	}
@@ -76,6 +90,8 @@ class BlogFilesBuilder {
 		new CatHtmlFilesBuilder ( ).build ( );
 		new PagesHtmlFilesBuilder ( ).build ( );
 		new PostsHtmlFilesBuilder ( ).build ( );
+		new AllDatesHtmlFilesBuilder ( ).build ( );
+		new AllCatsHtmlFilesBuilder ( ).build ( );
 		process.exitCode = 0;
 	}
 

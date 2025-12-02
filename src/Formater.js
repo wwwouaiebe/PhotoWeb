@@ -1,5 +1,20 @@
 class Formater {
 
+	static #months = [
+		' janvier ',
+		' février ',
+		' mars ',
+		' avril ',
+		' mai ',
+		' juin  ',
+		' juillet ',
+		' août ',
+		' septembre ',
+		' octobre ',
+		' novembre ',
+		' décembre '
+	];
+
 	static toAscii ( str ) {
 		return str.normalize ( 'NFD' ).replaceAll ( /[\u0300-\u036F]/g, '' );
 	}
@@ -20,24 +35,16 @@ class Formater {
 		return isoDate.replaceAll ( /:/g, '' );
 	}
 
+	static isoDateToMonthYear ( isoDate ) {
+		const tmpDate = new Date ( isoDate );
+		return Formater.#months [ tmpDate. getMonth ( ) ] + tmpDate.getFullYear ( );
+	}
+
 	static formatDate ( isoDate ) {
 		const tmpDate = new Date ( isoDate );
 		const days = [ 'dimanche ', 'lundi ', 'mardi ', 'mercredi ', 'jeudi ', 'vendredi ', 'samedi ' ];
-		const months = [
-			' janvier ',
-			' février ',
-			' mars ',
-			' avril ',
-			' mai ',
-			' juin  ',
-			' juillet ',
-			' août ',
-			' septembre ',
-			' octobre ',
-			' novembre ',
-			' décembre '
-		];
-		return days [ tmpDate.getDay ( ) ] + tmpDate.getDate ( ) + months [ tmpDate. getMonth ( ) ] + tmpDate.getFullYear ( );
+		return days [ tmpDate.getDay ( ) ] + tmpDate.getDate ( ) +
+			Formater.#months [ tmpDate. getMonth ( ) ] + tmpDate.getFullYear ( );
 	}
 
 	static formatDateTime ( isoDate ) {
