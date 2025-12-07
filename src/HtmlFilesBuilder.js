@@ -37,6 +37,11 @@ import theBlog from './Blog.js';
 
 class HtmlFilesBuilder {
 
+	static includes = {
+		script : '',
+		style : ''
+	};
+
 	/**
 	 * the posts for witch the pages have to be build
 	 * @type {Array.<Post>}
@@ -179,7 +184,7 @@ class HtmlFilesBuilder {
 			parentCategory => {
 				navTop +=
 					'<span><a href="/cat/' + Formater.toUrlString ( parentCategory.name ) +
-					'/1/" title="' + parentCategory.name + '">' + parentCategory.name + '</a></span>';
+					'/1/" title="' + parentCategory.name + '"> ' + parentCategory.name + '</a> </span>';
 			}
 		);
 		return navTop;
@@ -307,8 +312,13 @@ class HtmlFilesBuilder {
 			.replaceAll ( /{{PhotoWeb:SlideShowData}}/g, this.buildSlideShowData ( ) )
 			.replaceAll ( /{{PhotoWeb:articles}}/g, this.buildArticlesHtml ( ) )
 			.replaceAll ( /{{PhotoWeb:pagination}}/g, this.buildPaginationHtml ( ) )
-			.replaceAll ( /{{PhotoWeb:nav}}/g, this.navHtml );
-
+			.replaceAll ( /{{PhotoWeb:nav}}/g, this.navHtml )
+			.replaceAll ( /{{PhotoWeb:script}}/g, HtmlFilesBuilder.includes.script )
+			.replaceAll ( /{{PhotoWeb:style}}/g, HtmlFilesBuilder.includes.style )
+			.replaceAll ( /<!--.*?-->/g, '' )
+			.replaceAll ( /\r\n|\r|\n/g, ' ' )
+			.replaceAll ( /\t/g, ' ' )
+			.replaceAll ( / {2,}/g, ' ' );
 		return htmlString;
 	}
 

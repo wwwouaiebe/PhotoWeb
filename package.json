@@ -11,13 +11,16 @@
   "devDependencies": {
         "eslint": "latest",
         "grunt": "latest",
-        "grunt-eslint": "latest"
+        "grunt-eslint": "latest",
+        "grunt-stylelint" : "latest"
   },
   "dependencies": {
     "sharp": "latest",
     "exif-reader" : "latest",
     "rollup" : "latest",
-    "terser" : "latest"
+    "terser" : "latest",
+    "stylelint": "latest",
+    "stylelint-config-standard": "latest"
   },
   "repository": {
     "type": "git",

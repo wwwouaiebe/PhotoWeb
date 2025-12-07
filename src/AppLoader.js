@@ -27,9 +27,6 @@ import theConfig from './Config.js';
 import DirManager from './DirManager.js';
 import BlogFilesBuilder from './BlogFilesBuilder.js';
 import fs from 'fs';
-import crypto from 'crypto';
-import { rollup } from 'rollup';
-import { minify } from 'terser';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -100,41 +97,6 @@ class AppLoader {
 	 */
 
 	async #start ( ) {
-
-		/*
-		let content = fs.readFileSync ( './dist/scripts/razara-1-1-3.min.js' );
-		const hash = crypto.createHash ( 'sha384' )
-			.update ( content, 'utf8' )
-			.digest ( 'base64' );
-
-		console.log ( hash );
-		*/
-		/*
-		const bundle = await rollup ( { input : 'srcScript/Main.js' } );
-		bundle.write (
-			{
-				file : 'dist/scripts/PhotoWeb.js',
-				format : 'iife'
-			}
-		);
-
-		let result = await minify (
-			fs.readFileSync ( 'dist/scripts/PhotoWeb.js', 'utf8' ),
-			{
-				mangle : true,
-				compress : false,
-				ecma : 2025
-			}
-		);
-
-		console.log ( result.code );
-
-		fs.writeFileSync (
-			'dist/scripts/PhotoWeb.min.js',
-			result.code,
-			'utf8'
-		);
-		*/
 
 		// start time
 		this.#startTime = process.hrtime.bigint ( );

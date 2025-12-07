@@ -83,6 +83,7 @@ h1 {
 	font-weight: bolder;
 	margin-left: 0.5cm;
 }
+
 p > span  {
 	font-weight: bold;
 }
@@ -104,16 +105,17 @@ p {
 	display:block;
 	margin-left : calc(50% - 1cm);
 }
+
 #red {
 	background-color: red;
 }
+
 #green {
 	background-color: green;
 }
 
 
 @media screen and (width >= 1281px) {
-
 	h1 {
 		font-size : 5em;
 		margin-left: 2cm;

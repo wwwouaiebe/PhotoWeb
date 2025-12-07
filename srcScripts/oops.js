@@ -150,11 +150,11 @@ class Oops {
 	#ref = '';
 
 	async #generateHash ( str ) {
-		const hash = crypto.createHash ( 'sha3-384' );
-		hash.update ( str );
-		const sha3Hash = hash.digest ( 'hex' );
+		const hash = crypto.createHash ( 'sha384' )
+			.update ( cssString, 'utf8' )
+			.digest ( 'base64' );
 
-		return sha3Hash;
+		return hash;
 	}
 
 	continue ( ) {
@@ -168,7 +168,7 @@ class Oops {
 	async wait ( ) {
 		const docURL = new URL ( window.location );
 		const ref = docURL.searchParams.get ( 'REF' ) || '';
-		if ( 'newanthisnes' === docURL.hostname ) {
+		if ( 'newanthisnes' === docURL.hostname || 'newouaie' === docURL.hostname ) {
 			this.continue ( );
 		}
 		else if ( '' !== ref ) {

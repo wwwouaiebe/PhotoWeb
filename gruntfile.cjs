@@ -28,7 +28,13 @@ module.exports = function ( grunt ) {
 				fix : true,
 				overrideConfigFile : 'eslint.config.js'
 			},
-			target : [ 'src/*.js', 'srcScript/*.js' ]
+			target : [ 'src/*.js', 'srcScripts/*.js' ]
+		},
+		stylelint : {
+			options : {
+				fix : true
+			},
+			src : [ 'srcStyles/*.css' ]
 		},
 		buildnumber : {
 			options : {
@@ -58,6 +64,7 @@ module.exports = function ( grunt ) {
 	} );
 
 	grunt.loadNpmTasks ( 'grunt-eslint' );
+	grunt.loadNpmTasks ( 'grunt-stylelint' );
 	grunt.loadTasks ( '../Grunt-wwwouaiebe-BuildNumber/tasks/' );
 
 	grunt.registerTask (
@@ -95,6 +102,7 @@ module.exports = function ( grunt ) {
 			'hello',
 			'buildnumber:start',
 			'eslint',
+			'stylelint',
 			'buildnumber:end',
 			'bye'
 		]

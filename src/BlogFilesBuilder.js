@@ -34,6 +34,9 @@ import PagesHtmlFilesBuilder from './PagesHtmlFilesBuilder.js';
 import PostsHtmlFilesBuilder from './PostsHtmlFilesBuilder.js';
 import AllCatsHtmlFilesBuilder from './AllCatsHtmlFilesBuilder.js';
 import AllDatesHtmlFilesBuilder from './AllDatesHtmlFilesBuilder.js';
+import JSSriptsFilesBuilder from './JSScriptsFilesBuilder.js';
+import HtmlFilesBuilder from './HtmlFilesBuilder.js';
+import crypto from 'crypto';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -79,32 +82,80 @@ class BlogFilesBuilder {
 		}
 	}
 
+	#cleanCss ( cssString ) {
+		let tmpCssString = cssString
+			.replaceAll ( /\r/g, ' ' )
+			.replaceAll ( /\n/g, ' ' )
+			.replaceAll ( /\t/g, ' ' )
+			.replaceAll ( /: /g, ':' )
+			.replaceAll ( / :/g, ':' )
+			.replaceAll ( / {/g, '{' )
+			.replaceAll ( / {2,}/g, '' )
+			.replaceAll ( /\u002F\u002A.*?\u002A\u002F/g, '' );
+
+		return tmpCssString;
+
+	}
+
 	/**
 	 *  Copy the js scripts, css and ico files to the correct directory
 	 */
 
-	#copyStylesScriptsIco ( ) {
-		let destDir = theConfig.destDir + '/scripts/';
+	#copyStyles ( ) {
+
+		const destDir = theConfig.destDir + '/styles/';
 		fs.mkdirSync ( destDir, { recursive : true } );
-		let fileNames = fs.readdirSync ( theConfig.distDir + '/scripts/' );
+
+		let cssString = '';
+
+		const fileNames = [
+			'reset.css',
+			'main.css',
+			'pagination.css',
+			'bigScreen.css',
+			'mouse.css',
+			'slideShow.css'
+		];
 		fileNames.forEach (
 			fileName => {
-				fs.copyFileSync ( theConfig.distDir + '/scripts/' + fileName, theConfig.destDir + '/scripts/' + fileName );
+				cssString += fs.readFileSync (
+					'./srcStyles/' + fileName,
+					'utf8'
+				);
 			}
 		);
 
-		fs.copyFileSync ( theConfig.srcDir + 'favicon.ico', theConfig.destDir + 'favicon.ico' );
-		fs.copyFileSync ( theConfig.srcDir + 'robots.txt', theConfig.destDir + 'robots.txt' );
+		cssString = this.#cleanCss ( cssString );
 
-		destDir = theConfig.destDir + '/styles/';
-		fs.mkdirSync ( destDir, { recursive : true } );
-		fileNames = fs.readdirSync ( theConfig.distDir + '/styles/' );
-		fileNames.forEach (
-			fileName => {
-				fs.copyFileSync ( theConfig.distDir + '/styles/' + fileName, theConfig.destDir + '/styles/' + fileName );
-			}
+		fs.writeFileSync ( destDir + 'index.min.css', cssString );
+
+		const hash = crypto.createHash ( 'sha384' )
+			.update ( cssString, 'utf8' )
+			.digest ( 'base64' );
+
+		HtmlFilesBuilder.includes.style =
+			'href="/styles/index.min.css" type="text/css" rel="stylesheet" media="screen" ' +
+			'integrity="sha384-' + hash + '" ' +
+			'crossorigin="anonymous"';
+
+		fs.copyFileSync ( './srcStyles/right.png', destDir + 'right.png' );
+		fs.copyFileSync ( './srcStyles/left.png', destDir + 'left.png' );
+		fs.copyFileSync ( './srcStyles/opensans-regular.woff2', destDir + 'opensans-regular.woff2' );
+	}
+
+	#buildOppsCss ( ) {
+		let cssString = this.#cleanCss (
+			fs.readFileSync ( './srcStyles/Oops.css', 'utf8' )
 		);
-		fs.copyFileSync ( theConfig.srcDir + 'favicon.ico', theConfig.destDir + 'favicon.ico' );
+		const hash = crypto.createHash ( 'sha384' )
+			.update ( cssString, 'utf8' )
+			.digest ( 'base64' );
+
+		fs.writeFileSync ( theConfig.destDir + '/styles/oops.min.css', cssString );
+
+		return 'href="/styles/oops.min.css" type="text/css" rel="stylesheet" media="screen" ' +
+			'integrity="sha384-' + hash + '" ' +
+			'crossorigin="anonymous"';
 	}
 
 	/**
@@ -123,7 +174,7 @@ class BlogFilesBuilder {
 			else {
 
 				// stop ... missing file
-				console.error ( '\n\x1b[31mTthe file' + theConfig.srcDir + 'robots.txt was not found\x1b[0m' );
+				console.error ( '\n\x1b[31mThe file' + theConfig.srcDir + 'robots.txt was not found\x1b[0m' );
 				process.exitCode = 1;
 			}
 		}
@@ -153,7 +204,7 @@ class BlogFilesBuilder {
 			else {
 
 				// stop ... missing file
-				console.error ( '\n\x1b[31mTthe file' + theConfig.srcDir + 'htaccess/root.htaccess was not found\x1b[0m' );
+				console.error ( '\n\x1b[31mThe file' + theConfig.srcDir + 'htaccess/root.htaccess was not found\x1b[0m' );
 				process.exitCode = 1;
 				return;
 			}
@@ -177,7 +228,7 @@ class BlogFilesBuilder {
 			else {
 
 				// stop ... missing file
-				console.error ( '\n\x1b[31mTthe file' + theConfig.srcDir + 'htaccess/medias.htaccess was not found\x1b[0m' );
+				console.error ( '\n\x1b[31mThe file' + theConfig.srcDir + 'htaccess/medias.htaccess was not found\x1b[0m' );
 				process.exitCode = 1;
 				return;
 			}
@@ -198,7 +249,11 @@ class BlogFilesBuilder {
 		for ( let filesCounter = 0; filesCounter < fileNames.length; filesCounter ++ ) {
 			const fileName = fileNames [ filesCounter ];
 			const lstat = fs.lstatSync ( theConfig.destDir + fileName );
-			if ( lstat.isDirectory ( ) && 'medias' !== fileName ) {
+			if (
+				lstat.isDirectory ( )
+				&&
+				-1 === [ 'scripts', 'styles', 'medias' ].indexOf ( fileName )
+			  ) {
 				try {
 					if ( fs.existsSync ( theConfig.srcDir + 'htaccess/subdirectory.htaccess' ) ) {
 
@@ -212,7 +267,7 @@ class BlogFilesBuilder {
 
 						// stop ... missing file
 						console.error (
-							'\n\x1b[31mTthe file' + theConfig.srcDir +
+							'\n\x1b[31mThe file' + theConfig.srcDir +
 							'htaccess/subdirectory.htaccess was not found\x1b[0m'
 						);
 						process.exitCode = 1;
@@ -260,11 +315,31 @@ class BlogFilesBuilder {
 		// copy the photos
 		await this.#copyPhotos ( );
 
-		// copy the scrips, css files and ico files
-		this.#copyStylesScriptsIco ( );
+		// copy the css files
+		this.#copyStyles ( );
+
+		// copy the ico
+		fs.copyFileSync ( theConfig.srcDir + 'favicon.ico', theConfig.destDir + 'favicon.ico' );
+
+		// copy the js
+		const jsSriptsFilesBuilder = new JSSriptsFilesBuilder ( );
+		HtmlFilesBuilder.includes.script = await jsSriptsFilesBuilder.build ( './srcScripts/index.js' );
 
 		// copy the home page
-		fs.copyFileSync ( './html/home.html', theConfig.destDir + 'index.html' );
+		const includeScript = await jsSriptsFilesBuilder.build ( './srcScripts/oops.js' );
+		const includeStyle = this.#buildOppsCss ( );
+		const oopsPage = fs.readFileSync ( './html/home.html', 'utf8' )
+			.replaceAll ( /{{PhotoWeb:script}}/g, includeScript )
+			.replaceAll ( /{{PhotoWeb:style}}/g, includeStyle )
+			.replaceAll ( /<!--.*?-->/g, '' )
+			.replaceAll ( /\r\n|\r|\n/g, ' ' )
+			.replaceAll ( /\t/g, ' ' )
+			.replaceAll ( / {2,}/g, ' ' );
+
+		fs.writeFileSync ( theConfig.destDir + 'index.html', oopsPage );
+		if ( 1 === process.exitCode ) {
+			return;
+		}
 
 		// building the pages
 		new MainHtmlFilesBuilder ( ).build ( );

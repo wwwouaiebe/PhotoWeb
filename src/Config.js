@@ -31,6 +31,8 @@ Doc reviewed ...
 
 class Config {
 
+	debug;
+
 	/**
      * The web site to build
      * @type {String}
@@ -79,6 +81,7 @@ class Config {
 
 	constructor ( ) {
 		this.site = '';
+		this.debug = true;
 	}
 }
 
