@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "sharp": "latest",
-    "exif-reader" : "latest"
+    "exif-reader" : "latest",
+    "rollup" : "latest",
+    "terser" : "latest"
   },
   "repository": {
     "type": "git",
@@ -25,12 +27,10 @@
     "node": ">=18.18.2"
   },
   "scripts": {
-    "debug": "node node_modules/grunt/bin/grunt debug",
     "release": "node node_modules/grunt/bin/grunt release",
     "anthisnes": "node ./src/index.js --site=anthisnes.org",
     "ouaie": "node ./src/index.js --site=ouaie.be",
     "doc": "node ../ESSimpleDoc/bin/index.js --src=./src --dest=./docs/techDoc --validate=true"
-
   },
   "author": "wwwouaiebe",
   "license": "GPL-3.0",

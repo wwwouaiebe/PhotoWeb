@@ -38,6 +38,11 @@ class Post {
 
 	photoSrcFileName;
 
+	/**
+      * get the full name of the photo file, included the path
+      * @type {String}
+      */
+
 	get mediaPhotoFileName ( ) {
 		return '/medias/photos/' + this.photoSrcFileName.split ( '/' ).reverse ( ) [ 0 ].split ( '.' ) [ 0 ] + '.WebP';
 	}

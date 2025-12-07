@@ -59,7 +59,17 @@ class Config {
 
 	get postsDir ( ) { return this.srcDir + 'posts/'; }
 
+	/**
+     * The sources directory for pages
+     * @type {String}
+     */
+
 	get pagesDir ( ) { return this.srcDir + 'pages/'; }
+
+	/**
+     * The sources directory for js scripts and css
+     * @type {String}
+     */
 
 	get distDir ( ) { return './dist/'; }
 

@@ -26,6 +26,10 @@ Doc reviewed ...
 import theConfig from './Config.js';
 import DirManager from './DirManager.js';
 import BlogFilesBuilder from './BlogFilesBuilder.js';
+import fs from 'fs';
+import crypto from 'crypto';
+import { rollup } from 'rollup';
+import { minify } from 'terser';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -41,6 +45,11 @@ class AppLoader {
 	*/
 
 	static get #version ( ) { return 'v1.0.0-dev'; }
+
+	/**
+	 * The start time of the process
+	 * @type {Number}
+	 */
 
 	#startTime;
 
@@ -82,17 +91,59 @@ class AppLoader {
 		}
 		if ( ! DirManager.validateDir ( theConfig.destDir ) ) {
 			console.error ( 'Invalid path for the --dest parameter \x1b[31m%s\x1b[0m', theConfig.destDir );
-			crossOriginIsolated.log ( 'c' );
 			process.exitCode = 1;
 		}
 	}
 
-	#start ( ) {
+	/**
+	 * Start the app
+	 */
+
+	async #start ( ) {
+
+		/*
+		let content = fs.readFileSync ( './dist/scripts/razara-1-1-3.min.js' );
+		const hash = crypto.createHash ( 'sha384' )
+			.update ( content, 'utf8' )
+			.digest ( 'base64' );
+
+		console.log ( hash );
+		*/
+		/*
+		const bundle = await rollup ( { input : 'srcScript/Main.js' } );
+		bundle.write (
+			{
+				file : 'dist/scripts/PhotoWeb.js',
+				format : 'iife'
+			}
+		);
+
+		let result = await minify (
+			fs.readFileSync ( 'dist/scripts/PhotoWeb.js', 'utf8' ),
+			{
+				mangle : true,
+				compress : false,
+				ecma : 2025
+			}
+		);
+
+		console.log ( result.code );
+
+		fs.writeFileSync (
+			'dist/scripts/PhotoWeb.min.js',
+			result.code,
+			'utf8'
+		);
+		*/
 
 		// start time
 		this.#startTime = process.hrtime.bigint ( );
 		console.info ( `\nStarting PhotoWeb ${AppLoader.#version}...\n` );
 	}
+
+	/**
+	 * Ends the app
+	 */
 
 	#end ( ) {
 
@@ -107,6 +158,16 @@ class AppLoader {
 			break;
 		default :
 			console.error ( '\n\x1b[31mProcess stopped due to errors\x1b[0m' );
+			try {
+				fs.rmSync (	theConfig.destDir, { recursive : true, force : true } );
+				fs.mkdirSync ( theConfig.destDir );
+				console.error ( '\n\x1b[36mDestination directory cleaned!!\x1b[0m' );
+			}
+			catch ( err ) {
+				console.error ( err );
+				console.error ( '\n\x1b[31mDestination directory not cleaned!!\x1b[0m' );
+			}
+
 			break;
 		}
 	}
