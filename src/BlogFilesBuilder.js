@@ -27,7 +27,6 @@ import theConfig from './Config.js';
 import DirManager from './DirManager.js';
 import theBlog from './Blog.js';
 import fs from 'fs';
-import sharp from 'sharp';
 import MainHtmlFilesBuilder from './MainHtmlFilesBuilder.js';
 import CatHtmlFilesBuilder from './CatHtmlFilesBuilder.js';
 import PagesHtmlFilesBuilder from './PagesHtmlFilesBuilder.js';
@@ -36,6 +35,7 @@ import AllCatsHtmlFilesBuilder from './AllCatsHtmlFilesBuilder.js';
 import AllDatesHtmlFilesBuilder from './AllDatesHtmlFilesBuilder.js';
 import JSSriptsFilesBuilder from './JSScriptsFilesBuilder.js';
 import HtmlFilesBuilder from './HtmlFilesBuilder.js';
+import BlogMediasBuilder from './BlogMediasBuilder.js';
 import crypto from 'crypto';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
@@ -47,41 +47,10 @@ import crypto from 'crypto';
 class BlogFilesBuilder {
 
 	/**
-	 * Copy the blog's photos to the correct directory, remove the exif data, add a copyright and an artist in the exif data,
-	 * transform jpg to Webp and create a reducted photo
+	 * Clean a css string, removing white space, tab, comments
+	 * @param {String} cssString the string to clean
+	 * @returns {String} the cleaned string
 	 */
-
-	async #copyPhotos ( ) {
-		const destDir = theConfig.destDir + '/medias/photos/';
-		fs.mkdirSync ( destDir, { recursive : true } );
-		for ( let postCounter = 0; postCounter < theBlog.blogPosts.length; postCounter ++ ) {
-			let post = theBlog.blogPosts [ postCounter ];
-			await sharp ( post.photoSrcFileName )
-				.keepIccProfile ( )
-				.withExif (
-					{
-						IFD0 : {
-							Copyright : 'wwwouaiebe contact https://www.ouaie.be/',
-							Artist : 'wwwouaiebe contact https://www.ouaie.be/'
-						}
-					}
-				)
-				.toFile ( destDir + post.photoIsoDate.replaceAll ( /:/g, '' ) + '.WebP' );
-			await sharp ( post.photoSrcFileName )
-				.keepIccProfile ( )
-				.withExif (
-					{
-						IFD0 : {
-							Copyright : 'wwwouaiebe contact https://www.ouaie.be/',
-							Artist : 'wwwouaiebe contact https://www.ouaie.be/'
-						}
-					}
-				)
-				.resize ( { height : 162 } )
-				.toFile ( ( destDir + post.photoIsoDate.replaceAll ( /:/g, '' ) + '_s.WebP' ) );
-		}
-	}
-
 	#cleanCss ( cssString ) {
 		let tmpCssString = cssString
 			.replaceAll ( /\r/g, ' ' )
@@ -141,21 +110,6 @@ class BlogFilesBuilder {
 		fs.copyFileSync ( './srcStyles/right.png', destDir + 'right.png' );
 		fs.copyFileSync ( './srcStyles/left.png', destDir + 'left.png' );
 		fs.copyFileSync ( './srcStyles/opensans-regular.woff2', destDir + 'opensans-regular.woff2' );
-	}
-
-	#buildOppsCss ( ) {
-		let cssString = this.#cleanCss (
-			fs.readFileSync ( './srcStyles/Oops.css', 'utf8' )
-		);
-		const hash = crypto.createHash ( 'sha384' )
-			.update ( cssString, 'utf8' )
-			.digest ( 'base64' );
-
-		fs.writeFileSync ( theConfig.destDir + '/styles/oops.min.css', cssString );
-
-		return 'href="/styles/oops.min.css" type="text/css" rel="stylesheet" media="screen" ' +
-			'integrity="sha384-' + hash + '" ' +
-			'crossorigin="anonymous"';
 	}
 
 	/**
@@ -252,7 +206,7 @@ class BlogFilesBuilder {
 			if (
 				lstat.isDirectory ( )
 				&&
-				-1 === [ 'scripts', 'styles', 'medias' ].indexOf ( fileName )
+				-1 === [ 'scripts', 'styles', 'medias', '401', '403', '404' ].indexOf ( fileName )
 			  ) {
 				try {
 					if ( fs.existsSync ( theConfig.srcDir + 'htaccess/subdirectory.htaccess' ) ) {
@@ -290,6 +244,89 @@ class BlogFilesBuilder {
 	}
 
 	/**
+	 * The the pages for http errors 401, 403, and 404
+	 */
+
+	#copyErrorPages ( ) {
+
+		let destDir = theConfig.destDir + '/401/';
+		fs.mkdirSync ( destDir, { recursive : true } );
+		fs.copyFileSync ( './html/401.html', destDir + 'index.html' );
+
+		destDir = theConfig.destDir + '/403/';
+		fs.mkdirSync ( destDir, { recursive : true } );
+		fs.copyFileSync ( './html/403.html', destDir + 'index.html' );
+
+		destDir = theConfig.destDir + '/404/';
+		fs.mkdirSync ( destDir, { recursive : true } );
+		const htmlString = fs.readFileSync ( './html/404.html', 'utf8' )
+			.replaceAll ( /{{PhotoWeb:blogAuthor}}/g, theBlog.blogAuthor )
+			.replaceAll ( /{{PhotoWeb:blogTitle}}/g, theBlog.blogTitle + ' - Oufti bièsse, t\'es pierdou!' )
+			.replaceAll ( /{{PhotoWeb:blogDescription}}/g, theBlog.blogDescription )
+			.replaceAll ( /{{PhotoWeb:blogHeading}}/g, theBlog.blogHeading )
+			.replaceAll ( /{{PhotoWeb:blogKeywords}}/g, theBlog.blogKeywords )
+			.replaceAll ( /{{PhotoWeb:blogRobots}}/g, theBlog.blogRobots )
+			.replaceAll ( /{{PhotoWeb:script}}/g, HtmlFilesBuilder.includes.script )
+			.replaceAll ( /{{PhotoWeb:style}}/g, HtmlFilesBuilder.includes.style )
+			.replaceAll ( /<!--.*?-->/g, '' )
+			.replaceAll ( /\r\n|\r|\n/g, ' ' )
+			.replaceAll ( /\t/g, ' ' )
+			.replaceAll ( / {2,}/g, ' ' );
+		fs.writeFileSync ( destDir + 'index.html', htmlString );
+	}
+
+	/**
+	 * Build the css for the Oops page
+	 * @returns {String} a string with all the needed data to put in the <link> tag
+	 */
+
+	#buildOopsCss ( ) {
+		let cssString = this.#cleanCss (
+			fs.readFileSync ( './srcStyles/Oops.css', 'utf8' )
+		);
+		const hash = crypto.createHash ( 'sha384' )
+			.update ( cssString, 'utf8' )
+			.digest ( 'base64' );
+
+		fs.writeFileSync ( theConfig.destDir + '/styles/oops.min.css', cssString );
+
+		return 'href="/styles/oops.min.css" type="text/css" rel="stylesheet" media="screen" ' +
+			'integrity="sha384-' + hash + '" ' +
+			'crossorigin="anonymous"';
+	}
+
+	/**
+	 * Build and copy the Oops page
+	 */
+
+	async #copyOopsPage ( ) {
+		const includeScript = await new JSSriptsFilesBuilder ( ).build ( './srcScripts/oops.js' );
+
+		const includeStyle = this.#buildOopsCss ( );
+		const oopsPage = fs.readFileSync ( './html/home.html', 'utf8' )
+			.replaceAll ( /{{PhotoWeb:script}}/g, includeScript )
+			.replaceAll ( /{{PhotoWeb:style}}/g, includeStyle )
+			.replaceAll ( /<!--.*?-->/g, '' )
+			.replaceAll ( /\r\n|\r|\n/g, ' ' )
+			.replaceAll ( /\t/g, ' ' )
+			.replaceAll ( / {2,}/g, ' ' );
+		fs.writeFileSync ( theConfig.destDir + 'index.html', oopsPage );
+	}
+
+	/**
+	 * Copy all the files that are in the directore /others/
+	 */
+
+	#copyOthers ( ) {
+		const srcDir = theConfig.srcDir + 'others/';
+		const destDir = theConfig.destDir;
+		if ( ! fs.existsSync ( srcDir ) ) {
+			return;
+		}
+		fs.cpSync ( srcDir, destDir, { recursive : true } );
+	}
+
+	/**
 	 * Build the complete blog
 	 */
 
@@ -313,7 +350,7 @@ class BlogFilesBuilder {
 		}
 
 		// copy the photos
-		await this.#copyPhotos ( );
+		await new BlogMediasBuilder ( ).build ( );
 
 		// copy the css files
 		this.#copyStyles ( );
@@ -322,24 +359,14 @@ class BlogFilesBuilder {
 		fs.copyFileSync ( theConfig.srcDir + 'favicon.ico', theConfig.destDir + 'favicon.ico' );
 
 		// copy the js
-		const jsSriptsFilesBuilder = new JSSriptsFilesBuilder ( );
-		HtmlFilesBuilder.includes.script = await jsSriptsFilesBuilder.build ( './srcScripts/index.js' );
-
-		// copy the home page
-		const includeScript = await jsSriptsFilesBuilder.build ( './srcScripts/oops.js' );
-		const includeStyle = this.#buildOppsCss ( );
-		const oopsPage = fs.readFileSync ( './html/home.html', 'utf8' )
-			.replaceAll ( /{{PhotoWeb:script}}/g, includeScript )
-			.replaceAll ( /{{PhotoWeb:style}}/g, includeStyle )
-			.replaceAll ( /<!--.*?-->/g, '' )
-			.replaceAll ( /\r\n|\r|\n/g, ' ' )
-			.replaceAll ( /\t/g, ' ' )
-			.replaceAll ( / {2,}/g, ' ' );
-
-		fs.writeFileSync ( theConfig.destDir + 'index.html', oopsPage );
+		HtmlFilesBuilder.includes.script = await new JSSriptsFilesBuilder ( ).build ( './srcScripts/index.js' );
 		if ( 1 === process.exitCode ) {
 			return;
 		}
+
+		this.#copyOopsPage ( );
+
+		this.#copyErrorPages ( );
 
 		// building the pages
 		new MainHtmlFilesBuilder ( ).build ( );
@@ -360,6 +387,8 @@ class BlogFilesBuilder {
 		if ( 1 === process.exitCode ) {
 			return;
 		}
+
+		this.#copyOthers ( );
 
 		// Everything ok. Return with process.exitCode = 0
 		process.exitCode = 0;

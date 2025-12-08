@@ -31,6 +31,13 @@ Doc reviewed ...
 
 class Config {
 
+     /**
+      * The way scripts files are build. 
+      * When true scripts files are simply loaded as ES modules
+      * When false scripts files are build with Rollup and Terser
+      * @type {Boolean}
+      */
+
 	debug;
 
 	/**
@@ -81,7 +88,7 @@ class Config {
 
 	constructor ( ) {
 		this.site = '';
-		this.debug = true;
+		this.debug = false;
 	}
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /*
 Copyright - 2023 - wwwouaiebe - Contact: https://www.ouaie.be/
 

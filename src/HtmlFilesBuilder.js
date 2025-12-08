@@ -37,6 +37,10 @@ import theBlog from './Blog.js';
 
 class HtmlFilesBuilder {
 
+	/**
+	 * The values to use for the scripts and styles includes
+	 * @type {Object}
+	 */
 	static includes = {
 		script : '',
 		style : ''

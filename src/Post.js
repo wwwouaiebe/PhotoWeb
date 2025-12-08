@@ -44,7 +44,7 @@ class Post {
       */
 
 	get mediaPhotoFileName ( ) {
-		return '/medias/photos/' + this.photoSrcFileName.split ( '/' ).reverse ( ) [ 0 ].split ( '.' ) [ 0 ] + '.WebP';
+		return '/medias/photos/posts/' + this.photoSrcFileName.split ( '/' ).reverse ( ) [ 0 ].split ( '.' ) [ 0 ] + '.WebP';
 	}
 
 	/**

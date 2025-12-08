@@ -121,6 +121,7 @@ class DropEL {
 			&&
 			1 === this.#oops.dragResults.dragStart
 			&&
+			// eslint-disable-next-line no-magic-numbers
 			10 < this.#oops.dragResults.drag
 			&&
 			1 === this.#oops.dragResults.dragEnter
@@ -145,18 +146,6 @@ class Oops {
 		drop : 0
 	};
 
-	#refHash = '#6688243ef9d7b60f716d57d830163592bf56d1146b3247b3809c3944b185da9bd58377f9074b20522b89f08227213170';
-
-	#ref = '';
-
-	async #generateHash ( str ) {
-		const hash = crypto.createHash ( 'sha384' )
-			.update ( cssString, 'utf8' )
-			.digest ( 'base64' );
-
-		return hash;
-	}
-
 	continue ( ) {
 		let anchor = document.createElement ( 'a' );
 		// eslint-disable-next-line no-magic-numbers
@@ -167,15 +156,9 @@ class Oops {
 
 	async wait ( ) {
 		const docURL = new URL ( window.location );
-		const ref = docURL.searchParams.get ( 'REF' ) || '';
 		if ( 'newanthisnes' === docURL.hostname || 'newouaie' === docURL.hostname ) {
-			this.continue ( );
-		}
-		else if ( '' !== ref ) {
-			const refHash = await this.#generateHash ( ref );
-			if ( this.#refHash === refHash ) {
-				this.continue ( );
-			}
+
+			// this.continue ( );
 		}
 	}
 

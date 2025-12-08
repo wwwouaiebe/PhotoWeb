@@ -70,6 +70,11 @@ class AppLoader {
 					}
 					theConfig.site = argContent [ 1 ];
 					break;
+				case '--debug' :
+					if ( ' true' === argContent [ 1 ] ) {
+						theConfig.debug = true;
+					}
+					break;
 				case '--version' :
 					console.error ( `\n\t\x1b[36mVersion : ${AppLoader.#version}\x1b[0m\n` );
 					process.exitCode = 1;

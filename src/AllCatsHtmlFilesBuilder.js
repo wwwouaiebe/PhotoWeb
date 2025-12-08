@@ -93,10 +93,12 @@ class AllCatsHtmlFilesBuilder extends SinglePageHtmlFilesBuilder {
     		    let postInfos = post.categories.toString ( ) + ', ' + Formater.isoDateToHumanDateTime ( post.photoIsoDate );
 
 				articlesHtml +=
-                    '<a href="/posts/' + Formater.isoDateToUrlString ( post.photoIsoDate ) +
+                    '<a href="/posts/' +
+					Formater.isoDateToUrlString ( post.photoIsoDate ) +
                     '/" title="' + postInfos +
-
-                    '"><img src="/medias/photos/' + Formater.isoDateToUrlString ( post.photoIsoDate ) + '_s.WebP" title=" ' +
+                    '"><img src="/medias/photos/posts/' +
+					Formater.isoDateToUrlString ( post.photoIsoDate ) +
+					'_s.WebP" title=" ' +
                     postInfos + '"></a>';
 			}
 		);
