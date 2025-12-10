@@ -51,6 +51,7 @@ class BlogFilesBuilder {
 	 * @param {String} cssString the string to clean
 	 * @returns {String} the cleaned string
 	 */
+
 	#cleanCss ( cssString ) {
 		let tmpCssString = cssString
 			.replaceAll ( /\r/g, ' ' )

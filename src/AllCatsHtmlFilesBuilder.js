@@ -99,7 +99,7 @@ class AllCatsHtmlFilesBuilder extends SinglePageHtmlFilesBuilder {
                     '"><img src="/medias/photos/posts/' +
 					Formater.isoDateToUrlString ( post.photoIsoDate ) +
 					'_s.WebP" title=" ' +
-                    postInfos + '"></a>';
+                    postInfos + '"></a> ';
 			}
 		);
 		articlesHtml += '</p>';
