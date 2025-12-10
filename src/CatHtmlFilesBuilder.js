@@ -53,12 +53,17 @@ class CatHtmlFilesBuilder extends HtmlFilesBuilder {
 
 	buildNavCatHeader ( ) {
 
+		let catChildrensTitle = '';
+		if ( fs.existsSync ( theConfig.srcDir + '/menu/catChildrensTitle.html' ) ) {
+			catChildrensTitle = fs.readFileSync ( theConfig.srcDir + '/menu/catChildrensTitle.html' );
+		}
+
 		if ( this.#category.parent ) {
 			return '<h1>' + this.#category.parent + ', ' + this.#category.name + '</h1>';
 		}
 		let childrensName = '<h1>' + this.#category.name + '</h1>';
 		if ( 0 !== this.#category.childrens.length ) {
-			childrensName += '<h1>Les chemins et les champs: </h1><p>';
+			childrensName += catChildrensTitle + '<p>';
 			this.#category.childrens.forEach (
 				children => {
 					childrensName +=
