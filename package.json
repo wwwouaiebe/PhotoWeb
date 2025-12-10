@@ -32,6 +32,8 @@
   "scripts": {
     "anthisnes": "node ./src/index.js --site=anthisnes.org",
     "ouaie": "node ./src/index.js --site=ouaie.be",
+    "anthisnes-DebugMode": "node ./src/index.js --site=anthisnes.org --debug=true",
+    "ouaie-DebugMode": "node ./src/index.js --site=ouaie.be --debug=true",
     "Grunt-esLint-styleLint": "node node_modules/grunt/bin/grunt release",
     "documentation": "node ../ESSimpleDoc/bin/index.js --src=./src --dest=./docs/techDoc --validate=true"
   },

@@ -974,7 +974,7 @@ class SlideShow {
 		await this.#loadImage ( currentSlideShowData.src );
 
 		// Adapting the image
-		// this.#slideShowImgHTMLElement.src = currentSlideShowData.src;
+		this.#slideShowImgHTMLElement.src = currentSlideShowData.src;
 		this.#slideShowImgHTMLElement.title = legend;
 		this.#slideShowImgHTMLElement.alt = legend;
 		this.#slideShowImgHTMLElement.className = currentSlideShowData.class;

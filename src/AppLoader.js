@@ -71,7 +71,7 @@ class AppLoader {
 					theConfig.site = argContent [ 1 ];
 					break;
 				case '--debug' :
-					if ( ' true' === argContent [ 1 ] ) {
+					if ( 'true' === argContent [ 1 ] ) {
 						theConfig.debug = true;
 					}
 					break;

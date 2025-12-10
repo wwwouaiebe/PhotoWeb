@@ -241,7 +241,7 @@ class HtmlFilesBuilder {
 			post => {
 				slideShowDataArray.push (
 					{
-						scr : post.mediaPhotoFileName,
+						src : post.mediaPhotoFileName,
 						date : Formater.isoDateToHumanDateTime ( post.photoIsoDate ),
 						exif : post.photoTechInfo,
 						cat : post.categories.toString ( ),
