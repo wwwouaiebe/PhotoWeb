@@ -51,6 +51,12 @@ class CatHtmlFilesBuilder extends HtmlFilesBuilder {
 
 	get rootDestDir ( ) { return 'cat/' + Formater.toUrlString ( this.#category.name ) + '/'; }
 
+	/**
+	 * Build the contains of the nav for cats pages or an empty string for others pages
+	 * Overload of the base class buildNavCatHeader
+	 * @returns {String} the contains of the nav for cats pages or an empty string for others pages
+	 */
+
 	buildNavCatHeader ( ) {
 
 		let catChildrensTitle = '';

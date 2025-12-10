@@ -254,6 +254,12 @@ class HtmlFilesBuilder {
 		return JSON.stringify ( slideShowDataArray );
 	}
 
+	/**
+	 * Build the contains of the nav for cats pages or an empty string for others pages
+	 * Must be overloaded in the CatHtmlFilesBuilder
+	 * @returns {String} the contains of the nav for cats pages or an empty string for others pages
+	 */
+
 	buildNavCatHeader ( ) {
 		return '';
 	}
