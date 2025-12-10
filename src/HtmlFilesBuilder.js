@@ -27,6 +27,7 @@ import Formater from './Formater.js';
 import fs from 'fs';
 import theConfig from './Config.js';
 import theBlog from './Blog.js';
+import theNavHtmlBuilder from './NavHtmlBuilder.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -41,6 +42,7 @@ class HtmlFilesBuilder {
 	 * The values to use for the scripts and styles includes
 	 * @type {Object}
 	 */
+
 	static includes = {
 		script : '',
 		style : ''
@@ -87,20 +89,6 @@ class HtmlFilesBuilder {
 	 */
 
 	#postsPerPage = 5;
-
-	/**
-	 * The html string for the <nav> part
-	 * @type {String}
-	 */
-
-	#navHtml;
-
-	/**
-	 * The content of the nav html tag
-	 * @type {String}
-	 */
-
-	get navHtml ( ) { return this.#navHtml; }
 
 	/**
 	 * the posts that have to be displayed on the build pages
@@ -162,45 +150,12 @@ class HtmlFilesBuilder {
 	}
 
 	/**
-	 * Build the html string for the <nav> part
-	 * Because the navigation is the same on all the builded pages, we compute this only one and save it in a variable
-	 */
-
-	buildNavHtml ( ) {
-
-		// reading the menu
-		this.#navHtml = fs.readFileSync ( theConfig.srcDir + 'menu/menu.html', { encoding : 'utf8' } );
-
-		// replacing the {{PhotoWeb:navTop}} tag
-		this.#navHtml = this.#navHtml.replaceAll ( /{{PhotoWeb:navTop}}/g, this.#buildNavTopHtml ( ) );
-	}
-
-	/**
-	 *
-	 * @returns {String} An html string with a link to parent categories
-	 */
-
-	#buildNavTopHtml ( ) {
-		let navTop = '';
-
-		// loop on the blog categories
-		theBlog.blogCategories.getParentCategories ( ).forEach (
-			parentCategory => {
-				navTop +=
-					'<span><a href="/cat/' + Formater.toUrlString ( parentCategory.name ) +
-					'/1/" title="' + parentCategory.name + '"> ' + parentCategory.name + '</a> </span>';
-			}
-		);
-		return navTop;
-	}
-
-	/**
 	 * get an html string containing a link to the category page of a category
 	 * @param {String} categoryName The name of the category for witch a link must be build
 	 * @returns {String} an html string with a link
 	 */
 
-	#getCategoryLinksHtml ( categoryName ) {
+	categoryLinksHtml ( categoryName ) {
 		let categoryLinksHtml = '';
 		let parentCategory = null;
 		let childrenCategory = theBlog.blogCategories.getCategory ( categoryName );
@@ -250,7 +205,7 @@ class HtmlFilesBuilder {
             '" title="' + postInfos +
             '" alt="' + postInfos +
             '"><figcaption><p>' +
-			this.#getCategoryLinksHtml ( post.categories [ 1 ] || post.categories [ 0 ] ) +
+			this.categoryLinksHtml ( post.categories [ 1 ] || post.categories [ 0 ] ) +
 			formatedDateTime + '</p>' +
             '<p class="cyPictureInfo"><span>📷</span><span>' + post.photoTechInfo + '</span></p>' +
             '</figcaption></figure></article>';
@@ -299,6 +254,10 @@ class HtmlFilesBuilder {
 		return JSON.stringify ( slideShowDataArray );
 	}
 
+	buildNavCatHeader ( ) {
+		return '';
+	}
+
  	/**
 	 * Build an html string for the current page
 	 * @returns {String} the html string of the current page
@@ -316,7 +275,8 @@ class HtmlFilesBuilder {
 			.replaceAll ( /{{PhotoWeb:SlideShowData}}/g, this.buildSlideShowData ( ) )
 			.replaceAll ( /{{PhotoWeb:articles}}/g, this.buildArticlesHtml ( ) )
 			.replaceAll ( /{{PhotoWeb:pagination}}/g, this.buildPaginationHtml ( ) )
-			.replaceAll ( /{{PhotoWeb:nav}}/g, this.navHtml )
+			.replaceAll ( /{{PhotoWeb:nav}}/g, theNavHtmlBuilder.navHtml )
+			.replaceAll ( /{{PhotoWeb:navCatHeader}}/g, this.buildNavCatHeader ( ) )
 			.replaceAll ( /{{PhotoWeb:script}}/g, HtmlFilesBuilder.includes.script )
 			.replaceAll ( /{{PhotoWeb:style}}/g, HtmlFilesBuilder.includes.style )
 			.replaceAll ( /<!--.*?-->/g, '' )
@@ -357,7 +317,6 @@ class HtmlFilesBuilder {
 	 */
 
 	build ( ) {
-		this.buildNavHtml ( );
 	}
 
 	/**

@@ -23,9 +23,11 @@ Doc reviewed ...
 */
 /* ------------------------------------------------------------------------------------------------------------------------- */
 
+import fs from 'fs';
 import HtmlFilesBuilder from './HtmlFilesBuilder.js';
 import theBlog from './Blog.js';
 import Formater from './Formater.js';
+import theConfig from './Config.js';
 
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
@@ -49,12 +51,32 @@ class CatHtmlFilesBuilder extends HtmlFilesBuilder {
 
 	get rootDestDir ( ) { return 'cat/' + Formater.toUrlString ( this.#category.name ) + '/'; }
 
+	buildNavCatHeader ( ) {
+
+		if ( this.#category.parent ) {
+			return '<h1>' + this.#category.parent + ', ' + this.#category.name + '</h1>';
+		}
+		let childrensName = '<h1>' + this.#category.name + '</h1>';
+		if ( 0 !== this.#category.childrens.length ) {
+			childrensName += '<h1>Les chemins et les champs: </h1><p>';
+			this.#category.childrens.forEach (
+				children => {
+					childrensName +=
+						'<span><a href="/cat/' + Formater.toUrlString ( children ) + '/1/' +
+						'/" title="' + children + '" >' +
+						children + '</a> </span>';
+				}
+			);
+			childrensName += '</p>';
+		}
+		return childrensName;
+	}
+
 	/**
 	 * Overload of the base class method build
 	 */
 
 	build ( ) {
-		this.buildNavHtml ( );
 		theBlog.blogCategories.getCategories ( ).forEach (
 			category => {
 				this.#category = category;
