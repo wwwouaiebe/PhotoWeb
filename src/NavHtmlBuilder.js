@@ -28,7 +28,6 @@ import theBlog from './Blog.js';
 import theConfig from './Config.js';
 import Formater from './Formater.js';
 
-
 /* ------------------------------------------------------------------------------------------------------------------------- */
 /**
  * A class for computing the nav html tag. Because the navigation is the same in all the pages, we build the nav html
@@ -49,7 +48,7 @@ class NavHtmlBuilder {
 	 * The contains of the nav html tag
 	 * @type {String}
 	 */
-	
+
 	get navHtml ( ) {
 		if ( this.#navHtml ) {
 			return this.#navHtml;
@@ -61,8 +60,8 @@ class NavHtmlBuilder {
 	}
 
 	/**
-	 * Build the html links to the categories 
-	 * @returns {String} the html links to the categories 
+	 * Build the html links to the categories
+	 * @returns {String} the html links to the categories
 	 */
 
 	#buildAllCatsHtmlMenu ( ) {

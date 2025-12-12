@@ -328,6 +328,17 @@ class BlogFilesBuilder {
 	}
 
 	/**
+	 * Copy the files needed for the hashTags management
+	 */
+
+	#copyHashTagsUtilities ( ) {
+		const srcDir = './srcScripts/hash/';
+		const destDir = theConfig.destDir + 'scripts/hash/';
+
+		fs.cpSync ( srcDir, destDir, { recursive : true } );
+	}
+
+	/**
 	 * Build the complete blog
 	 */
 
@@ -390,6 +401,7 @@ class BlogFilesBuilder {
 		}
 
 		this.#copyOthers ( );
+		this.#copyHashTagsUtilities ( );
 
 		// Everything ok. Return with process.exitCode = 0
 		process.exitCode = 0;
