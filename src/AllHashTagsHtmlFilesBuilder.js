@@ -115,5 +115,4 @@ class AllHashTagsHtmlFilesBuilder extends SinglePageHtmlFilesBuilder {
 
 export default AllHashTagsHtmlFilesBuilder;
 
-
 /* --- End of file --------------------------------------------------------------------------------------------------------- */

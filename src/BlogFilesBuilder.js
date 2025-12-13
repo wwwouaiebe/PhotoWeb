@@ -392,7 +392,6 @@ class BlogFilesBuilder {
 		new AllCatsHtmlFilesBuilder ( ).build ( );
 		new AllHashTagsHtmlFilesBuilder ( ).build ( );
 
-
 		// copy the robots.txt
 		this.#copyRobotsTxt ( );
 		if ( 1 === process.exitCode ) {
