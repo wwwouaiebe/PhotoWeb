@@ -31,8 +31,10 @@ import MainHtmlFilesBuilder from './MainHtmlFilesBuilder.js';
 import CatHtmlFilesBuilder from './CatHtmlFilesBuilder.js';
 import PagesHtmlFilesBuilder from './PagesHtmlFilesBuilder.js';
 import PostsHtmlFilesBuilder from './PostsHtmlFilesBuilder.js';
+import HashTagsHtmlFileBuilder from './HashTagsHtmlFileBuilder.js';
 import AllCatsHtmlFilesBuilder from './AllCatsHtmlFilesBuilder.js';
 import AllDatesHtmlFilesBuilder from './AllDatesHtmlFilesBuilder.js';
+import AllHashTagsHtmlFilesBuilder from './AllHashTagsHtmlFilesBuilder.js';
 import JSSriptsFilesBuilder from './JSScriptsFilesBuilder.js';
 import HtmlFilesBuilder from './HtmlFilesBuilder.js';
 import BlogMediasBuilder from './BlogMediasBuilder.js';
@@ -385,8 +387,11 @@ class BlogFilesBuilder {
 		new CatHtmlFilesBuilder ( ).build ( );
 		new PagesHtmlFilesBuilder ( ).build ( );
 		new PostsHtmlFilesBuilder ( ).build ( );
+		new HashTagsHtmlFileBuilder ( ).build ( );
 		new AllDatesHtmlFilesBuilder ( ).build ( );
 		new AllCatsHtmlFilesBuilder ( ).build ( );
+		new AllHashTagsHtmlFilesBuilder ( ).build ( );
+
 
 		// copy the robots.txt
 		this.#copyRobotsTxt ( );

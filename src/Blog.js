@@ -94,6 +94,13 @@ class Blog {
 	#blogPages;
 
 	/**
+	 * The hashtags of the blog
+	 * @type {Array.<Object}
+	 */
+
+	#blogHashTags;
+
+	/**
 	 * The categories of the blog
 	 * @type {Array.<Category>}
 	 */
@@ -174,6 +181,13 @@ class Blog {
 	get blogPages ( ) { return this.#blogPages; }
 
 	/**
+	 * The hashtags of the blog
+	 * @type {Array.<Object}
+	 */
+
+	get blogHashTags ( ) { return this.#blogHashTags; }
+
+	/**
 	 *  A boolean that is true when
 	 * - call to the loadData was previously done
 	 * - a blog.json file is found and loaded
@@ -213,6 +227,16 @@ class Blog {
 		}
 		this.#blogPosts = await new PostsCreator ( ).extract ( );
 		this.#blogPages = await new PagesCreator ( ).extract ( );
+
+		if ( fs.existsSync ( theConfig.srcDir + 'hashtags/hashtags.json' ) ) {
+			this.#blogHashTags = JSON.parse (
+				fs.readFileSync ( theConfig.srcDir + 'hashtags/hashtags.json' )
+			);
+		}
+		else {
+			this.#blogHashTags = [];
+		}
+
 		try {
 			const blogData = JSON.parse (
 				fs.readFileSync ( theConfig.srcDir + 'blog.json', { encoding : 'utf8' } )

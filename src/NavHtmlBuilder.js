@@ -79,6 +79,33 @@ class NavHtmlBuilder {
 	}
 
 	/**
+	 * Build the html links to the hashtags
+	 * @returns {String} the html links to the hashtags
+	 */
+
+	#buildAllHashTagsHtmlMenu ( ) {
+
+		if ( 0 === theBlog.blogHashTags.length ) {
+			return '';
+		}
+
+		let hashTagsHtmlMenu = '<h1>#</h1><p>';
+		theBlog.blogHashTags.forEach (
+			blogHashTag => {
+				hashTagsHtmlMenu +=
+					'<span> <a href="' + '/hashtags/' + Formater.toUrlString ( blogHashTag.hashTag ) +
+					'/1/" title="# ' + blogHashTag.hashTag + '" ># ' + blogHashTag.hashTag + '</a> </span>';
+			}
+		);
+		hashTagsHtmlMenu +=
+			'<span> <a href="' + '/allhashtags/" title="Tous les #" >Tous les #</a> </span>';
+
+		hashTagsHtmlMenu += '</p>';
+
+		return hashTagsHtmlMenu;
+	}
+
+	/**
 	 * Build the nav html tag
 	 */
 
@@ -87,8 +114,9 @@ class NavHtmlBuilder {
 		// reading the menu
 		this.#navHtml = fs.readFileSync ( theConfig.srcDir + 'menu/menu.html', { encoding : 'utf8' } );
 
-		// replacing the {{PhotoWeb:navTop}} tag
+		// replacing the {{PhotoWeb:navAllCats}} tag
 		this.#navHtml = this.#navHtml.replaceAll ( /{{PhotoWeb:navAllCats}}/g, this.#buildAllCatsHtmlMenu ( ) );
+		this.#navHtml = this.#navHtml.replaceAll ( /{{PhotoWeb:navAllHashTags}}/g, this.#buildAllHashTagsHtmlMenu ( ) );
 	}
 
 	/**

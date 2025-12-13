@@ -47,7 +47,7 @@ class HashTagsDialog {
 	 * @type {string}
 	 */
 
-	#fileName;
+	#photoIsoDate;
 
 	/**
 	 * the hashtags collection
@@ -90,7 +90,7 @@ class HashTagsDialog {
 				labelHtml.htmlFor = checkBoxId;
 				let checkBoxHtml = document.createElement ( 'input' );
 				checkBoxHtml.type = 'checkbox';
-				checkBoxHtml.checked = hashTag.fileNames.includes ( this.#fileName );
+				checkBoxHtml.checked = hashTag.photoIsoDates.includes ( this.#photoIsoDate );
 				checkBoxHtml.id = checkBoxId;
 				paragraphHtml.appendChild ( checkBoxHtml );
 				paragraphHtml.appendChild ( labelHtml );
@@ -108,7 +108,7 @@ class HashTagsDialog {
 	}
 
 	/**
-	 * Add the currently treated img 
+	 * Add the currently treated img
 	 * @param {String} src the src for the img
 	 */
 
@@ -122,7 +122,7 @@ class HashTagsDialog {
 
 	/**
 	 * Event handler used when opening a file
-	 * @param {event} changeEvent 
+	 * @param {event} changeEvent
 	 */
 
 	#onChangeOpenFile ( changeEvent ) {
@@ -158,27 +158,33 @@ class HashTagsDialog {
 
 	/**
 	 * Verify that the user have selected a valid img
-	 * @param {HTMLImageElement} target the img on witch the user have made a right click 
+	 * @param {HTMLImageElement} target the img on witch the user have made a right click
 	 * @returns {Boolean} true when the image is valid
 	 */
 
 	#controlImage ( target ) {
+
 		// Removing path and extension and eventually the '_s' in the file name
 		let fileName = target.src
 			.split ( '/' )
 			.reverse ( ) [ 0 ]
 			.split ( '.' )[ 0 ]
 			.replaceAll ( /_s/g, '' );
+
 		// Match...
 		fileName = fileName.match (
 			/[0-9]{4}-[0-1]{1}[0-9]{1}-[0-3]{1}[0-9]{1}T[0-2]{1}[0-9]{1}[0-6]{1}[0-9]{1}[0-6]{1}[0-9]{1}/
 		) [ 0 ];
-		this.#fileName = fileName;
 
-		// test if the file name is avalid date
+		// test if the file name is a valid iso date
 		// eslint-disable-next-line no-magic-numbers
 		fileName = fileName.slice ( 0, 13 ) + ':' + fileName.slice ( 13, 15 ) + ':' + fileName.slice ( 15 );
-		return 'Invalid Date' !== new Date ( fileName ).toString ( );
+		const isValidDate = 'Invalid Date' !== new Date ( fileName ).toString ( );
+
+		if ( isValidDate ) {
+			this.#photoIsoDate = fileName;
+		}
+		return isValidDate;
 	}
 
 	/**
@@ -189,25 +195,25 @@ class HashTagsDialog {
 
 		// Saving checkboxes
 		for ( let checkBoxCounter = 0; checkBoxCounter < this.#checkBoxesHtml.length; checkBoxCounter ++ ) {
-			
+
 			// Saving checked boxes
 			if (
 				this.#checkBoxesHtml [ checkBoxCounter ].checked
 				&&
-				! this.#hashTags [ checkBoxCounter ].fileNames.includes ( this.#fileName )
+				! this.#hashTags [ checkBoxCounter ].photoIsoDates.includes ( this.#photoIsoDate )
 			) {
-				this.#hashTags [ checkBoxCounter ].fileNames.push ( this.#fileName );
+				this.#hashTags [ checkBoxCounter ].photoIsoDates.push ( this.#photoIsoDate );
 			}
 
 			// Saving unchecked boxes
 			if (
 				! this.#checkBoxesHtml [ checkBoxCounter ].checked
 				&&
-				this.#hashTags [ checkBoxCounter ].fileNames.includes ( this.#fileName )
+				this.#hashTags [ checkBoxCounter ].photoIsoDates.includes ( this.#photoIsoDate )
 			) {
-				this.#hashTags [ checkBoxCounter ].fileNames =
-					this.#hashTags [ checkBoxCounter ].fileNames.filter (
-						fileName => fileName !== this.#fileName
+				this.#hashTags [ checkBoxCounter ].photoIsoDates =
+					this.#hashTags [ checkBoxCounter ].photoIsoDates.filter (
+						fileName => fileName !== this.#photoIsoDate
 					);
 			}
 		}
@@ -215,18 +221,10 @@ class HashTagsDialog {
 		// Saving edit box
 		if ( this.#editBoxNewHashTagHtml.value ) {
 			this.#hashTags.push (
-				{ hashTag : this.#editBoxNewHashTagHtml.value, fileNames : [ this.#fileName ] }
+				{ hashTag : this.#editBoxNewHashTagHtml.value, photoIsoDates : [ this.#photoIsoDate ] }
 			);
 			this.#hashTags.sort (
-				( first, second ) => {
-					if ( first.hashTag > second.hashTag ) {
-						return 1;
-					}
-					else if ( first.hashTag < second.hashTag ) {
-						return -1;
-					}
-					return 0;
-				}
+				( first, second ) => first.hashTag.localeCompare ( second.hashTag )
 			);
 		}
 	}
@@ -247,18 +245,18 @@ class HashTagsDialog {
 	#saveToFile ( ) {
 		this.#saveContent ( );
 		this.#hashTags = this.#hashTags
-			.filter ( hash => 0 < hash.fileNames.length )
+			.filter ( hash => 0 < hash.photoIsoDates.length )
 			.sort (
-				( first, second ) => {
-					if ( first.hashTag > second.hashTag ) {
-						return 1;
-					}
-					else if ( first.hashTag < second.hashTag ) {
-						return -1;
-					}
-					return 0;
-				}
+				( first, second ) => first.hashTag.localeCompare ( second.hashTag )
 			);
+		this.#hashTags.forEach (
+			hashTag => {
+				hashTag.photoIsoDates.sort (
+					( first, second ) => second.localeCompare ( first )
+				);
+			}
+		);
+
 		const fileContent = JSON.stringify ( this.#hashTags );
 		try {
 			const objURL = window.URL.createObjectURL (
@@ -281,6 +279,7 @@ class HashTagsDialog {
 	/**
 	 * Add buttons to the dialog
 	 */
+
 	#addButtons ( ) {
 
 		// ok button
@@ -330,7 +329,7 @@ class HashTagsDialog {
 }
 
 /**
- * The one and only one HashTagsDialog 
+ * The one and only one HashTagsDialog
  * @type {HashTagsDialog}
  */
 
@@ -352,7 +351,7 @@ class ImgContextMenuEL {
 
 	/**
 	 * Event handler
-	 * @param {*} event 
+	 * @param {*} event
 	 */
 
 	handleEvent ( event ) {
