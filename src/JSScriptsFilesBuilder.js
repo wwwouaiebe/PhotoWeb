@@ -172,13 +172,7 @@ class JSSriptsFilesBuilder {
 
 	async #buildDebug ( ) {
 
-		// Copy all the files in the destination folder
-		let fileNames = fs.readdirSync ( './srcScripts/' );
-		fileNames.forEach (
-			fileName => {
-				fs.copyFileSync ( './srcScripts/' + fileName, this.#destScriptsDir + fileName );
-			}
-		);
+		fs.cpSync ( './srcScripts/', this.#destScriptsDir, { recursive : true } );
 
 		// return
 		return 'src="/scripts/' + this.#fileName + '.js" type="module"';

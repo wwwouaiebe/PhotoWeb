@@ -72,7 +72,7 @@ class NavHtmlBuilder {
 			parentCategory => {
 				categoriesHtmlMenu +=
 					'<span><a href="/cat/' + Formater.toUrlString ( parentCategory.name ) +
-					'/1/" title="' + parentCategory.name + '"> ' + 
+					'/1/" title="' + parentCategory.name + '"> ' +
 					parentCategory.name.replaceAll ( / /g, '&nbsp;' ) + '</a> </span>';
 			}
 		);
@@ -100,7 +100,7 @@ class NavHtmlBuilder {
 			}
 		);
 		hashTagsHtmlMenu +=
-			'<span> <a href="' + '/allhashtags/" title="Tous les #" >Tous les #</a> </span>';
+			'<span> <a href="' + '/allhashtags/" title="# Tous" ># Tous</a> </span>';
 
 		hashTagsHtmlMenu += '</p>';
 

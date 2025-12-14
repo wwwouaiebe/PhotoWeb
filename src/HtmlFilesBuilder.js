@@ -207,8 +207,19 @@ class HtmlFilesBuilder {
             '"><figcaption><p>' +
 			this.categoryLinksHtml ( post.categories [ 1 ] || post.categories [ 0 ] ) +
 			formatedDateTime + '</p>' +
-            '<p class="cyPictureInfo"><span>📷</span><span>' + post.photoTechInfo + '</span></p>' +
-            '</figcaption></figure></article>';
+            '<p class="cyPictureInfo"><span>📷</span><span>' + post.photoTechInfo + '</span></p>';
+		if ( 0 !== post.hashTags.length ) {
+			articleHtml += '<p>';
+			post.hashTags.forEach (
+				hashTag => {
+					articleHtml +=
+						`<a href="/hashtags/${Formater.toUrlString (hashTag)}/1/"' + 
+						' title="# ${hashTag}" alt="# ${hashTag}">#&nbsp;${hashTag} </a> `;
+				}
+			);
+			articleHtml += '</p>';
+		}
+		articleHtml += '</figcaption></figure></article>';
 
 		return articleHtml;
 	}

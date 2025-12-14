@@ -80,7 +80,14 @@ class Post {
      * @type {Array.<String>}
      */
 
-	categories;
+	categories = [];
+
+     /**
+      * The hashtags of the photo
+      * @type {Array.<String>}
+      */
+
+	hashTags = [];
 
 	/**
      * The date of the photo in the ISO format
@@ -94,6 +101,7 @@ class Post {
      */
 
 	constructor ( ) {
+		Object.seal ( this );
 	}
 }
 

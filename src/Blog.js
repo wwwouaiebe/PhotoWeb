@@ -218,6 +218,41 @@ class Blog {
 	}
 
 	/**
+	 * Do the synchro between hashTags and post: 
+	 * Verify that all posts referenced in the hashtags.json file are always valid
+	 * Update the hashtags.json file
+	 */
+
+	#postsHashTagsSynchro ( ) {
+		if ( 0 === this.#blogHashTags.length ) {
+			return;
+		}
+
+		this.#blogHashTags.forEach (
+			blogHashTag => {
+				const newPhotoIsoDates = [];
+				blogHashTag.photoIsoDates.forEach (
+					photoIsoDate => {
+						const post = this.#blogPosts.find (
+							element => element.photoIsoDate === photoIsoDate
+						);
+						if ( post ) {
+							post.hashTags.push ( blogHashTag.hashTag );
+							newPhotoIsoDates.push ( photoIsoDate );
+						}
+					}
+				);
+				blogHashTag.photoIsoDates = newPhotoIsoDates;
+			}
+		);
+
+		fs.writeFileSync (
+			theConfig.srcDir + 'hashtags/hashtags.json',
+			JSON.stringify ( this.#blogHashTags )
+		);
+	}
+
+	/**
 	 * Load the data for the blog: the blog.json files, the posts, the pages and the categories
 	 */
 
@@ -236,6 +271,8 @@ class Blog {
 		else {
 			this.#blogHashTags = [];
 		}
+
+		this.#postsHashTagsSynchro ( );
 
 		try {
 			const blogData = JSON.parse (
@@ -266,6 +303,7 @@ class Blog {
 			console.error ( err );
 			this.#isValid = false;
 		}
+
 		this.#areDataLoaded = true;
 	}
 
