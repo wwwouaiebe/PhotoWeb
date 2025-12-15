@@ -77,6 +77,12 @@ body.cyLight {
 	--link-color: #8b0000;
 }
 
+body {
+	max-width : 972px; 
+	margin-left: auto;
+	margin-right: auto;
+}
+
 h1 {
 	font-size:2em;
 	color: red;
@@ -93,45 +99,26 @@ p {
 	margin-right: 0.5cm;
 }
 
-#carresContainer {
+
+#oopsSquaresContainer {
 	text-align: center;
 }
 
-.carre{
-	width: 2cm;
-	height:2cm;
-	margin-top: 2cm;
-	margin-bottom: 2cm;
+.oopsSquare {
+	position: absolute;
+	width: 72px;
+	height:72px;
 	display:block;
-	margin-left : calc(50% - 1cm);
 }
 
-#red {
+#oopsRedSquare {
 	background-color: red;
 }
 
-#green {
-	background-color: green;
+#oopsRedSquare:hover {
+	cursor:grab
 }
 
-
-@media screen and (width >= 1281px) {
-	h1 {
-		font-size : 5em;
-		margin-left: 2cm;
-	}
-
-	p {
-		margin-left : 4cm;
-		margin-right: 4cm;
-	}
-
-.carre {
-		margin-top: 3cm;
-		width: 3cm;
-		height:3cm;
-		margin-left: 3cm;
-		margin-right: 3cm;
-		display:inline-block;
-	}
+#oopsGreenSquare {
+	background-color: green;
 }

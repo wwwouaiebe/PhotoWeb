@@ -199,7 +199,7 @@ class HtmlFilesBuilder {
 
 		// building the article html string
 		articleHtml +=
-			 '<article><figure><img class="cy' + post.photoHtmlClassName +
+			 '<article><figure><img class="cyPicture' + post.photoHtmlClassName +
             '" width="' + post.photoWidth + '" height="' + post.photoHeight +
             '" src="' + post.mediaPhotoFileName +
             '" title="' + postInfos +
