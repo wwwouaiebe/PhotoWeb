@@ -43,7 +43,7 @@ class BlogMediasBuilder {
 
 	#newExifData = {
 		IFD0 : {
-			Copyright : 'wwwouaiebe contact https://www.ouaie.be/',
+			Copyright : '© wwwouaiebe 2007-2025 - https://www.ouaie.be/ - Licence CC BY-NC-SA 4.0',
 			Artist : 'wwwouaiebe contact https://www.ouaie.be/'
 		}
 	};

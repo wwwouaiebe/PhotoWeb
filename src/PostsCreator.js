@@ -243,7 +243,7 @@ class PostsCreator {
 				await this.#findFiles ( srcDir + fileName + '/' );
 				this.#categories.pop ( );
 			}
-			else if ( lstat.isFile ( ) && 'jpg' === fileName.split ( '.' ).reverse ( )[ 0 ] ) {
+			else if ( lstat.isFile ( ) && 'jpg' === fileName.split ( '.' ).reverse ( )[ 0 ].toLocaleLowerCase ( ) ) {
 
 				// Data extraction
 				this.#photoSrcFileName = srcDir + fileNames [ filesCounter ];
