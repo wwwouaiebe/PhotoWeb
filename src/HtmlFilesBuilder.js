@@ -213,7 +213,7 @@ class HtmlFilesBuilder {
 			post.hashTags.forEach (
 				hashTag => {
 					articleHtml +=
-						`<a href="/hashtags/${Formater.toUrlString (hashTag)}/1/"' + 
+						`<a href="/hashtags/${Formater.toUrlString ( hashTag )}/1/"' + 
 						' title="# ${hashTag}" alt="# ${hashTag}">#&nbsp;${hashTag} </a> `;
 				}
 			);

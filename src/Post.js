@@ -82,7 +82,7 @@ class Post {
 
 	categories = [];
 
-     /**
+	/**
       * The hashtags of the photo
       * @type {Array.<String>}
       */

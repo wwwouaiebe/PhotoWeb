@@ -218,7 +218,7 @@ class Blog {
 	}
 
 	/**
-	 * Do the synchro between hashTags and post: 
+	 * Do the synchro between hashTags and post:
 	 * Verify that all posts referenced in the hashtags.json file are always valid
 	 * Update the hashtags.json file
 	 */

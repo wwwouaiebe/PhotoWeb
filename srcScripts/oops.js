@@ -81,14 +81,14 @@ class Oops {
 	#moveActive = false;
 
 	/**
-	 * A counter for the move 
+	 * A counter for the move
 	 * @type {Number}
 	 */
 
 	#moveCounter = 0;
 
 	/**
-	 * The margins dimension 
+	 * The margins dimension
 	 * @type {Number}
 	 */
 
@@ -177,7 +177,7 @@ class Oops {
 		if (
 			10 > Math.abs ( this.#redSquareLeft - this.#greenSquareLeft )
 			&&
-			10 < this.#moveCounter 
+			10 < this.#moveCounter
 		) {
 			this.#reset ( );
 			this.#continue ( );
@@ -219,20 +219,20 @@ class Oops {
 	 */
 
 	constructor ( ) {
-		
+
 		Object.freeze ( this );
 
 		// init variables
 		this.#redSquare = document.getElementById ( 'oopsRedSquare' );
 		this.#margin = Oops.#maxWidth < this.screenAvailable.width ? ( this.screenAvailable.width - Oops.#maxWidth ) / 2 : 0;
-		this.#widthAvailable = Math.min ( this.screenAvailable.width , Oops.#maxWidth );
+		this.#widthAvailable = Math.min ( this.screenAvailable.width, Oops.#maxWidth );
 		this.#reset ( );
 		this.#greenSquareLeft = Math.ceil ( this.#margin + ( 0.75 * this.#widthAvailable ) - ( 0.5 * Oops.#squareDim ) );
 
 		// Moving the green square
 		document.getElementById ( 'oopsGreenSquare' ).style.left = String ( this.#greenSquareLeft ) + 'px';
 
-		//event handlers
+		// event handlers
 		this.#redSquare.addEventListener ( 'pointerdown', event => this.#startMoveRedSquare ( event ) );
 		this.#redSquare.addEventListener ( 'pointermove', event => this.#moveRedSquare ( event ) );
 		this.#redSquare.addEventListener ( 'pointerup', event => this.#endMoveRedSquare ( event ) );
