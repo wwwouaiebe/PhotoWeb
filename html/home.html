@@ -2,29 +2,23 @@
 <html>
     <head>
         <meta charset='UTF-8' >
-        <title>Oops</title>
+        <title>{{PhotoWeb:blogTitle}} - Entrez</title>
         <link {{PhotoWeb:style}} >
     </head>
     <body>
-        <h1>Oops</h1>
-        <p>
-            Désolé... Nous sommes un peu fatigué de voir de multiples robots IA pomper le contenu de ce site et nous avons du prendre quelques précautions...
-        </p>
-        <p>
-            <span>Vous n'êtes pas un robot?</span> Faites glisser le carré rouge sur le carré vert pour continuer... 
-        </p>
-        <p>
-            Sorry... We're a bit tired of seeing multiple AI bots scraping the content from this site and we've had to take some precautions...
-        </p>
-        <p>
-            <span>You're not a robot?</span> Drag and drop the red square onto the green square to continue...
-        </p>
-        <div id="oopsSquaresContainer">
-            <div class="oopsSquare" id="oopsRedSquare">
-            </div>
-            <div class="oopsSquare" id="oopsGreenSquare">
-            </div>
+        <div id="cyImg">
         </div>
-        <script {{PhotoWeb:script}}></script>
+        <header id="cySiteName">
+            <a href="https://www.{{PhotoWeb:blogTitle}}">{{PhotoWeb:blogHeading}}</a>
+        </header>
+        <section>
+            <noscript>
+                <p>Oops... Désolé... Nous sommes un peu fatigué de voir de multiples robots IA pomper le contenu de ce site et nous avons du prendre quelques précautions...</p>
+                <p>Il n'est plus possible de voir ce site sans activer Javascript.</p>
+                <p>Sorry... We're a bit tired of seeing multiple AI bots scraping the content from this site and we've had to take some precautions... </p>
+                <p>It's not anymore possible to see this site without Javascript enabled.</p>
+            </noscript>
+        </section>
+    <script {{PhotoWeb:script}}></script>
     </body>
 </html>

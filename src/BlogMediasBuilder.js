@@ -43,7 +43,7 @@ class BlogMediasBuilder {
 
 	#newExifData = {
 		IFD0 : {
-			Copyright : '© wwwouaiebe 2007-2025 - https://www.ouaie.be/ - Licence CC BY-NC-SA 4.0',
+			Copyright : '© wwwouaiebe 2007-2026 - https://www.ouaie.be/ - Licence CC BY-NC-SA 4.0',
 			Artist : 'wwwouaiebe contact https://www.ouaie.be/'
 		}
 	};
@@ -67,18 +67,20 @@ class BlogMediasBuilder {
 	 * and transform the jpg into WebP
 	 */
 
-	async #copyPagesPhotos ( ) {
-		const srcDir = theConfig.srcDir + 'medias/photos/pages/';
+	async #copyPagesPhotos ( folder ) {
+		const srcDir = theConfig.srcDir + folder;
 		if ( ! fs.existsSync ( srcDir ) ) {
 			return;
 		}
-		const destDir = theConfig.destDir + '/medias/photos/pages/';
+		const destDir = theConfig.destDir + folder;
 		fs.mkdirSync ( destDir, { recursive : true } );
 		const fileNames = fs.readdirSync ( srcDir );
 		for ( let filesCounter = 0; filesCounter < fileNames.length; filesCounter ++ ) {
 			const fileName = fileNames [ filesCounter ];
 			const lstat = fs.lstatSync ( srcDir + fileName );
-			if ( lstat.isFile ( ) && 'jpg' === fileName.split ( '.' ).reverse ( )[ 0 ] ) {
+			if (
+				lstat.isFile ( )
+				&& 'jpg' === fileName.toLowerCase ( ).split ( '.' ) .reverse ( )[ 0 ] ) {
 				await sharp ( srcDir + fileName )
 					.keepIccProfile ( )
 					.withExif ( this.#newExifData )
@@ -116,7 +118,8 @@ class BlogMediasBuilder {
 
 	async build ( ) {
 		await this.#copyPostsPhotos ( );
-		await this.#copyPagesPhotos ( );
+		await this.#copyPagesPhotos ( 'medias/photos/pages/' );
+		await this.#copyPagesPhotos ( 'homePage/' );
 		this.#copyOthers ( );
 	}
 

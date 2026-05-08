@@ -283,17 +283,19 @@ class BlogFilesBuilder {
 	 * @returns {String} a string with all the needed data to put in the <link> tag
 	 */
 
-	#buildOopsCss ( ) {
+	#buildHomeCss ( ) {
+
 		let cssString = this.#cleanCss (
-			fs.readFileSync ( './srcStyles/Oops.css', 'utf8' )
+			fs.readFileSync ( './srcStyles/reset.css', 'utf8' ) +
+			fs.readFileSync ( './srcStyles/home.css', 'utf8' )
 		);
 		const hash = crypto.createHash ( 'sha384' )
 			.update ( cssString, 'utf8' )
 			.digest ( 'base64' );
 
-		fs.writeFileSync ( theConfig.destDir + '/styles/oops.min.css', cssString );
+		fs.writeFileSync ( theConfig.destDir + '/styles/home.min.css', cssString );
 
-		return 'href="/styles/oops.min.css" type="text/css" rel="stylesheet" media="screen" ' +
+		return 'href="/styles/home.min.css" type="text/css" rel="stylesheet" media="screen" ' +
 			'integrity="sha384-' + hash + '" ' +
 			'crossorigin="anonymous"';
 	}
@@ -302,18 +304,20 @@ class BlogFilesBuilder {
 	 * Build and copy the Oops page
 	 */
 
-	async #copyOopsPage ( ) {
-		const includeScript = await new JSSriptsFilesBuilder ( ).build ( './srcScripts/oops.js' );
+	async #copyHomePage ( ) {
+		const includeScript = await new JSSriptsFilesBuilder ( ).build ( './srcScripts/home.js' );
+		const includeStyle = this.#buildHomeCss ( );
 
-		const includeStyle = this.#buildOopsCss ( );
-		const oopsPage = fs.readFileSync ( './html/home.html', 'utf8' )
+		const homePage = fs.readFileSync ( './html/home.html', 'utf8' )
 			.replaceAll ( /{{PhotoWeb:script}}/g, includeScript )
 			.replaceAll ( /{{PhotoWeb:style}}/g, includeStyle )
+			.replaceAll ( /{{PhotoWeb:blogTitle}}/g, theBlog.blogTitle )
+			.replaceAll ( /{{PhotoWeb:blogHeading}}/g, theBlog.blogHeading )
 			.replaceAll ( /<!--.*?-->/g, '' )
 			.replaceAll ( /\r\n|\r|\n/g, ' ' )
 			.replaceAll ( /\t/g, ' ' )
 			.replaceAll ( / {2,}/g, ' ' );
-		fs.writeFileSync ( theConfig.destDir + 'index.html', oopsPage );
+		fs.writeFileSync ( theConfig.destDir + 'index.html', homePage );
 	}
 
 	/**
@@ -378,7 +382,7 @@ class BlogFilesBuilder {
 			return;
 		}
 
-		this.#copyOopsPage ( );
+		this.#copyHomePage ( );
 
 		this.#copyErrorPages ( );
 
