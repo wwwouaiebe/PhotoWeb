@@ -2,8 +2,16 @@
 <html>
     <head>
         <meta charset='UTF-8' >
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" >
+		<meta name="ROBOTS" content="{{PhotoWeb:blogRobots}}" >
+		<meta name="author" content="{{PhotoWeb:blogAuthor}}" >
+		<meta name="color-scheme" content="dark light" >
+		<link {{PhotoWeb:style}}>
+		<link rel="preload" as="font" href="/styles/opensans-regular.woff2" type="font/woff2" crossorigin>
+		<title>{{PhotoWeb:blogTitle}}</title>
+		<meta name="description" lang="fr" content="{{PhotoWeb:blogTitle}} - {{PhotoWeb:blogDescription}}">
+		<meta name="keywords" lang="fr" content="{{PhotoWeb:blogKeywords}}">
         <title>{{PhotoWeb:blogTitle}} - Entrez</title>
-        <link {{PhotoWeb:style}} >
     </head>
     <body>
         <div id="cyImg">
@@ -12,13 +20,11 @@
             <a href="https://www.{{PhotoWeb:blogTitle}}">{{PhotoWeb:blogHeading}}</a>
         </header>
         <section>
-            <noscript>
-                <p>Oops... Désolé... Nous sommes un peu fatigué de voir de multiples robots IA pomper le contenu de ce site et nous avons du prendre quelques précautions...</p>
-                <p>Il n'est plus possible de voir ce site sans activer Javascript.</p>
-                <p>Sorry... We're a bit tired of seeing multiple AI bots scraping the content from this site and we've had to take some precautions... </p>
-                <p>It's not anymore possible to see this site without Javascript enabled.</p>
-            </noscript>
-        </section>
+            <p>Oops... Désolé... Nous sommes un peu fatigué de voir de multiples robots IA pomper le contenu de ce site et nous avons du prendre quelques précautions...</p>
+            <p>Il n'est plus possible de voir ce site sans activer Javascript.</p>
+            <p>Sorry... We're a bit tired of seeing multiple AI bots scraping the content from this site and we've had to take some precautions... </p>
+            <p>It's not anymore possible to see this site without Javascript enabled.</p>
+    </section>
     <script {{PhotoWeb:script}}></script>
     </body>
 </html>

@@ -301,7 +301,7 @@ class BlogFilesBuilder {
 	}
 
 	/**
-	 * Build and copy the Oops page
+	 * Build and copy the Home page
 	 */
 
 	async #copyHomePage ( ) {
@@ -313,6 +313,10 @@ class BlogFilesBuilder {
 			.replaceAll ( /{{PhotoWeb:style}}/g, includeStyle )
 			.replaceAll ( /{{PhotoWeb:blogTitle}}/g, theBlog.blogTitle )
 			.replaceAll ( /{{PhotoWeb:blogHeading}}/g, theBlog.blogHeading )
+			.replaceAll ( /{{PhotoWeb:blogRobots}}/g, theBlog.blogRobots )
+			.replaceAll ( /{{PhotoWeb:blogAuthor}}/g, theBlog.blogAuthor )
+			.replaceAll ( /{{PhotoWeb:blogDescription}}/g, theBlog.blogDescription )
+			.replaceAll ( /{{PhotoWeb:blogKeywords}}/g, theBlog.blogKeywords )
 			.replaceAll ( /<!--.*?-->/g, '' )
 			.replaceAll ( /\r\n|\r|\n/g, ' ' )
 			.replaceAll ( /\t/g, ' ' )

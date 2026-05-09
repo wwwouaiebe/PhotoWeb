@@ -116,6 +116,8 @@ body {
 
 body {
 	display: grid;
+	color: var(--main-color);
+	background-color: var(--main-background-color);
 	grid-template-columns: auto;
 	grid-template-rows: 56vw 1fr 1fr;
 }
@@ -123,7 +125,6 @@ body {
 #cyImg {
 	grid-column: 1 / 1;
 	grid-row: 1 / 1;
-	background-color: red;
 	background-image: url( "/homePage/homeH.WebP");
 	background-size: 100%;;
 }

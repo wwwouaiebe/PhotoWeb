@@ -44,7 +44,7 @@ class Oops {
 
 	async wait ( ) {
 		const docURL = new URL ( window.location );
-		if ( 'newanthisnes' === docURL.hostname || 'newouaie' === docURL.hostname ) {
+		if ( 'newanthisnes1' === docURL.hostname || 'newouaie1' === docURL.hostname ) {
 			this.#continue ( );
 		}
 	}
@@ -54,7 +54,9 @@ class Oops {
 		const enterElement = document.createElement ( 'span' );
 		enterElement.id = 'cyEnter';
 		enterElement.innerText = 'Entrez';
-		document.getElementsByTagName ( 'section' ) [ 0 ].appendChild ( enterElement );
+		const sectionElement = document.getElementsByTagName ( 'section' ) [ 0 ];
+		sectionElement.innerText = '';
+		sectionElement.appendChild ( enterElement );
 		enterElement.addEventListener ( 'click', this.#continue );
 	}
 }
